@@ -1,0 +1,430 @@
+lockfile_version: '1'
+generated_at: '2026-05-15T12:36:20.103282+00:00'
+apm_version: 0.11.0
+dependencies:
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  resolved_commit: 3422a8f57a4dc777c9d82859ecb294b6b517b086
+  virtual_path: presets/develop
+  is_virtual: true
+  package_type: apm_package
+  content_hash: sha256:519f7b33ca5a8167be4cc49957768f6555c7ba656ed12991eca666839499777c
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  resolved_commit: 3422a8f57a4dc777c9d82859ecb294b6b517b086
+  virtual_path: skills/hono
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .claude/skills/hono
+  content_hash: sha256:220e5e1b12bbaeec49ec362b6e2262d77632d0536e9758bba9acbbc323fef990
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: agents/architect.agent.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/agents/architect.md
+  deployed_file_hashes:
+    .claude/agents/architect.md: sha256:9db703bbd80011ccb47d14f2c5d782a85585347cc98fb5712ff1372d927c4c66
+  content_hash: sha256:36902d21f9e37730982a63fe93e85a80cf53155014d9da22e0d62af4dfe1bf8f
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: agents/build-error-resolver.agent.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/agents/build-error-resolver.md
+  deployed_file_hashes:
+    .claude/agents/build-error-resolver.md: sha256:9b788f2f7b722ce30ebf4a992ce33d99d3e45614f9a03ba53ecb279499277ccc
+  content_hash: sha256:417e65078730a34541c48b29d78418df24d20e6ad45f0a4f486d7ddf88a1d067
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: agents/code-reviewer.agent.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/agents/code-reviewer.md
+  deployed_file_hashes:
+    .claude/agents/code-reviewer.md: sha256:e48db79cb16db3fce1831b46923ad95777fb3dbf0c075afdbc32c41d20aabf4b
+  content_hash: sha256:3e8f31a5dbd6df7986ffd22ef62788241be73dcdff2b60eb7d5c74bf741cc8ca
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: agents/orchestrator.agent.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/agents/orchestrator.md
+  deployed_file_hashes:
+    .claude/agents/orchestrator.md: sha256:813e5902aab263fc3b97794d67eb8162f968c6822f3f73a507c5787e096ef06b
+  content_hash: sha256:dd15755449e2971d13a8eac923d18f413873b392eb8b932d3118677b7366b229
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: agents/planner.agent.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/agents/planner.md
+  deployed_file_hashes:
+    .claude/agents/planner.md: sha256:e89ec9dc13bd2c4aead57089907d2dd3caa27cc867cd6c36f951bd3fa0ff36b7
+  content_hash: sha256:b6384495aa7e08806c0b0aaa6c8559f773f474572787b1bdf77e67c8e88b75a5
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: agents/refactor-cleaner.agent.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/agents/refactor-cleaner.md
+  deployed_file_hashes:
+    .claude/agents/refactor-cleaner.md: sha256:00eb59783c89692f717d98f308d884307467e952c3426a82b70fc8e265b9ec52
+  content_hash: sha256:9ed045754673cc70c3bc8509acab2c627b6053bb70d1050c9d8e17700d66bad3
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: agents/security-reviewer.agent.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/agents/security-reviewer.md
+  deployed_file_hashes:
+    .claude/agents/security-reviewer.md: sha256:a495059d08fa3b27b3c214e6b05b5a26f879b9bdfda092290dba8efc2cc35dee
+  content_hash: sha256:873200b3f2e5bc2a96dce4e05defcf2f4b99a56f2355d4c3bc18e52a36fc2249
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: agents/tech-docs-searcher.agent.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/agents/tech-docs-searcher.md
+  deployed_file_hashes:
+    .claude/agents/tech-docs-searcher.md: sha256:bda150aaa137d8873e4f04ebb8912ddb73e06126f36faf273da5b0b3218af5fc
+  content_hash: sha256:9acac9b632b77ab69187579f799e92b8af56a157f9f820d6d953f0eed6688cdf
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: instructions/security.instructions.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/rules/security.md
+  deployed_file_hashes:
+    .claude/rules/security.md: sha256:3e8f8dd6a18b676a5b1dcaac9d592d759aee76d4b1d141a04d982d4dcdb53205
+  content_hash: sha256:315c7d85fd01ba271d698aa2810df3670e28584bc5e0b53c1e5b4032cdfbcd0b
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: prompts/checkpoint.prompt.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/commands/checkpoint.md
+  deployed_file_hashes:
+    .claude/commands/checkpoint.md: sha256:e2c884b44299a0d8d09fa987152f42b8302db08a27886fae9d1c5565df1f404f
+  content_hash: sha256:aa730e5c1ab91acc3ee5676c6b4ebce5757d08bfc075c9ce5271f59ee983cc19
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: prompts/code-review.prompt.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/commands/code-review.md
+  deployed_file_hashes:
+    .claude/commands/code-review.md: sha256:3db5c76fac5b66c0dc9e88640f4e059af2b9a1efe99a51ad0e04149c0370b828
+  content_hash: sha256:01080452be7ad803fd27a1f1d4eeea66852c082541912cb68aca88760f0632b7
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: prompts/eval.prompt.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/commands/eval.md
+  deployed_file_hashes:
+    .claude/commands/eval.md: sha256:c76cfa38c065441566376aca4206f36e0aaf1baece1b99daf2b419a9063682cb
+  content_hash: sha256:f5f10ec1cda62c2616c8b9a486bbf48f43eb89ae297e1b4abde9d6ffd42010ff
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: prompts/evolve.prompt.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/commands/evolve.md
+  deployed_file_hashes:
+    .claude/commands/evolve.md: sha256:2bf662560142ca4419019c7c9197a941381bd79f1a5a02b8e04193dcd033a1cd
+  content_hash: sha256:cb50eed29c40e0cf90f0981fe2a2379236d7ddf5cc8721f592051edfaed93fe4
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: prompts/instinct-export.prompt.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/commands/instinct-export.md
+  deployed_file_hashes:
+    .claude/commands/instinct-export.md: sha256:cefe66b7210f0f787d8561eade918fd3fdddb5f8cb8cf160aa8e3360544c68d2
+  content_hash: sha256:97dc36fd10a931520d1704038f2aebab47e9b4c10044f013de84088646edd3e1
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: prompts/instinct-import.prompt.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/commands/instinct-import.md
+  deployed_file_hashes:
+    .claude/commands/instinct-import.md: sha256:15c73778a47281b28c9958428d6c784e1ba1b8c01b8bf108ad7e7421ad663fda
+  content_hash: sha256:eba77e875037902e03dd1ca049c4b521f1d935a5f2394a279747d1c029c78b6a
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: prompts/instinct-status.prompt.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/commands/instinct-status.md
+  deployed_file_hashes:
+    .claude/commands/instinct-status.md: sha256:020801b77351647d3ef86176dbaf62f3f4f4bb8819a48cfb8ca42c03f8b897c0
+  content_hash: sha256:3151a1d362858dec9ee7afac1dab388af5c030cdc062ee51023a263e06eac48f
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: prompts/learn.prompt.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/commands/learn.md
+  deployed_file_hashes:
+    .claude/commands/learn.md: sha256:76f9b5efda80771661644abd33041aa2b529c4417bd07c9c4e62b195588fd8fb
+  content_hash: sha256:5493498347d5dbd8e48cd868efad3a55f623dba3637adab37c79917dbabcccfd
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: prompts/orchestrate.prompt.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/commands/orchestrate.md
+  deployed_file_hashes:
+    .claude/commands/orchestrate.md: sha256:b4287b6ca1175d7a5d9ee453818bcbd3be951f1ca052e2f44df4fdd45daf7153
+  content_hash: sha256:d6d6dc9ea33c6ea28405cb00702e0ecf66766095cd6a967d9a39588e75d8bdce
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: prompts/plan.prompt.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/commands/plan.md
+  deployed_file_hashes:
+    .claude/commands/plan.md: sha256:51b16b2cf46fbcc3733d363e7d80738caa0e626fe78eb017090c3cf89278ba21
+  content_hash: sha256:88c63695744b68112f698490f59842c7eadc83e62e3f1c8ac574ec3d01e0626c
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: prompts/refactor-clean.prompt.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/commands/refactor-clean.md
+  deployed_file_hashes:
+    .claude/commands/refactor-clean.md: sha256:22abeed760e0a09a62c4e404815fce1209b20bb29ee6d7153e6358f03e7afaed
+  content_hash: sha256:f7ccb6dc70aa581ce9fd9415b0c9fec220db0d98be2b1fd64375a9618488f985
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: prompts/sessions.prompt.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/commands/sessions.md
+  deployed_file_hashes:
+    .claude/commands/sessions.md: sha256:605bcd7507102af35512a26b9315c81ad42343664cb11d682a5c75550df0a631
+  content_hash: sha256:5d73a2ac6a6274857cd11efd5a44ff99508048a42277e6b94b75c41ec7e61ed1
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: prompts/skill-create.prompt.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/commands/skill-create.md
+  deployed_file_hashes:
+    .claude/commands/skill-create.md: sha256:f26ad876cff4f7462a3ff6b7eaf6fdfd22e2767582e2d2c7ce6e7623e220dc46
+  content_hash: sha256:7f0dca1dde219639862c11b8a432385413232a278bcf37078dbd26ce49db1122
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: prompts/tdd.prompt.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/commands/tdd.md
+  deployed_file_hashes:
+    .claude/commands/tdd.md: sha256:ec7285e9607f6b19cee043c25def9ea20f53a9cd3c2cb8ad65244df46a50f7e9
+  content_hash: sha256:29dec2f1f0d681cfc8cd00c7097109744349e5ce5ec8a170c5ebe6bef2497b34
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  virtual_path: prompts/verify.prompt.md
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: apm_package
+  deployed_files:
+  - .claude/commands/verify.md
+  deployed_file_hashes:
+    .claude/commands/verify.md: sha256:85c6d6056d18198217ef18cd2f133319c9444763d739ba3e219f01f86d5a9028
+  content_hash: sha256:dac6ccdebb3615208000d87770d99441bda84deee2684337e084a95ab3293b9e
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  resolved_commit: 3422a8f57a4dc777c9d82859ecb294b6b517b086
+  virtual_path: skills/empirical-prompt-tuning
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: claude_skill
+  deployed_files:
+  - .claude/skills/empirical-prompt-tuning
+  content_hash: sha256:9c64f10bca463d3ea059d1659d4dd9fddfd90239825c44f1be20c18a2e15b69a
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  resolved_commit: 3422a8f57a4dc777c9d82859ecb294b6b517b086
+  virtual_path: skills/eval-harness
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: claude_skill
+  deployed_files:
+  - .claude/skills/eval-harness
+  content_hash: sha256:58236c3e9e9e1fbaa412b7df4a3492e892abc30351bb16e0e1ec098913050f5f
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  resolved_commit: 3422a8f57a4dc777c9d82859ecb294b6b517b086
+  virtual_path: skills/iterative-retrieval
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: claude_skill
+  deployed_files:
+  - .claude/skills/iterative-retrieval
+  content_hash: sha256:41fab0e910c0699f6c7e66f61bec5a3284a8c941b8496cb7f43f0a8998c4d892
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  resolved_commit: 3422a8f57a4dc777c9d82859ecb294b6b517b086
+  virtual_path: skills/playwright-cli
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: claude_skill
+  deployed_files:
+  - .claude/skills/playwright-cli
+  content_hash: sha256:57dc421777e1ad9209a264eef76a57a57139fcec331a0eb7af03e1a111012d48
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  resolved_commit: 3422a8f57a4dc777c9d82859ecb294b6b517b086
+  virtual_path: skills/security-review
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: claude_skill
+  deployed_files:
+  - .claude/skills/security-review
+  content_hash: sha256:431e72be7344beaae3687b9c77ec87c69f40f213efde4722f70f510748b96ff1
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  resolved_commit: 3422a8f57a4dc777c9d82859ecb294b6b517b086
+  virtual_path: skills/strategic-compact
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: claude_skill
+  deployed_files:
+  - .claude/skills/strategic-compact
+  content_hash: sha256:5c6542af3b051e18ad34fb54cf3f4e4a855fd38731799c5d3edfab74c35f86cc
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  resolved_commit: 3422a8f57a4dc777c9d82859ecb294b6b517b086
+  virtual_path: skills/task-management
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: claude_skill
+  deployed_files:
+  - .claude/skills/task-management
+  content_hash: sha256:1a9723e4cc58fbefea7cdad5d363b6e7e440679afe696f08385fcc14149ca28f
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  resolved_commit: 3422a8f57a4dc777c9d82859ecb294b6b517b086
+  virtual_path: skills/task-verification
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: claude_skill
+  deployed_files:
+  - .claude/skills/task-verification
+  content_hash: sha256:2c0deb79ece470cb4a1fd196ee5b2ceccfcb51bc725dc2dfcb29a3e15ca17898
+- repo_url: sori883/ai-dotfiles
+  host: github.com
+  resolved_commit: 3422a8f57a4dc777c9d82859ecb294b6b517b086
+  virtual_path: skills/tdd-workflow
+  is_virtual: true
+  depth: 2
+  resolved_by: sori883/ai-dotfiles
+  package_type: claude_skill
+  deployed_files:
+  - .claude/skills/tdd-workflow
+  content_hash: sha256:dc541b3f22cbf458d86835ed6e200102f5a4524ed31ed3c0d23bd02344b5bfd8
+mcp_servers:
+- context7
+- serena
+mcp_configs:
+  context7:
+    name: context7
+    transport: http
+    registry: false
+    url: https://context7.liam.sh/mcp
+  serena:
+    name: serena
+    transport: stdio
+    args:
+    - --from
+    - git+https://github.com/oraios/serena
+    - serena
+    - start-mcp-server
+    - --context
+    - ide-assistant
+    - --project
+    - ./
+    registry: false
+    command: uvx

@@ -1,0 +1,39 @@
+{
+  "name": "@acme/jobs",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo node_modules",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint --flag unstable_native_nodejs_ts_config",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@acme/db": "workspace:*",
+    "@mozilla/readability": "^0.6.0",
+    "drizzle-orm": "catalog:",
+    "fast-xml-parser": "^5.8.0",
+    "linkedom": "^0.18.12",
+    "turndown": "^7.2.4"
+  },
+  "devDependencies": {
+    "@acme/eslint-config": "workspace:^",
+    "@acme/prettier-config": "workspace:*",
+    "@acme/tsconfig": "workspace:*",
+    "@libsql/client": "catalog:",
+    "@types/turndown": "^5.0.6",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "^4.1.5"
+  },
+  "prettier": "@acme/prettier-config"
+}

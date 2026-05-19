@@ -1,0 +1,27 @@
+packages:
+  - apps/*
+  - packages/*
+  - tooling/*
+
+catalog:
+  '@eslint/js': ^10.0.1
+  '@libsql/client': 0.17.3
+  '@tailwindcss/postcss': ^4.1.16
+  '@types/node': ^25.8.0
+  drizzle-kit: ^0.31.5
+  drizzle-orm: ^0.45.2
+  drizzle-zod: ^0.8.3
+  eslint: ^10.0.0
+  prettier: ^3.6.2
+  tailwindcss: ^4.1.16
+  typescript: ^6.0.3
+  zod: 4.4.3
+
+linkWorkspacePackages: true
+
+onlyBuiltDependencies:
+  - '@tailwindcss/oxide'
+
+publicHoistPattern:
+  - '@ianvs/prettier-plugin-sort-imports'
+  - prettier-plugin-tailwindcss

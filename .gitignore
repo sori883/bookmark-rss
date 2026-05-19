@@ -1,0 +1,68 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+node_modules
+.pnp
+.pnp.js
+
+# testing
+coverage
+
+# Cloudflare
+.wrangler
+
+# nitro
+.nitro/
+.output/
+
+# expo
+.expo/
+expo-env.d.ts
+apps/expo/.gitignore
+apps/expo/ios
+apps/expo/android
+
+# production
+build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# local env files
+.env
+.env*.local
+
+# personal Claude Code / Serena settings (per-user, not for the team)
+.claude/settings.local.json
+.serena/cache/
+
+# local sqlite (libsql)
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+.datastore
+.datastore-*
+
+# vercel
+.vercel
+
+# typescript
+dist/
+.cache
+
+# turbo
+.turbo
+
+# tanstack
+.tanstack
+
+# APM dependencies
+apm_modules/

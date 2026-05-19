@@ -1,0 +1,11 @@
+name: bookmark-rss
+version: 1.0.0
+description: APM project for bookmark-rss
+author: sori883
+dependencies:
+  apm:
+  - sori883/ai-dotfiles/presets/develop
+  - sori883/ai-dotfiles/skills/hono
+  mcp: []
+includes: auto
+scripts: {}
