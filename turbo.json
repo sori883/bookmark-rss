@@ -57,7 +57,10 @@
     "AUTH_DISCORD_SECRET",
     "AUTH_REDIRECT_PROXY_URL",
     "AUTH_SECRET",
-    "PORT"
+    "PORT",
+    "HOME",
+    "XDG_CONFIG_HOME",
+    "BOOKMARK_API_URL"
   ],
   "globalPassThroughEnv": ["NODE_ENV", "CI", "npm_lifecycle_event"]
 }

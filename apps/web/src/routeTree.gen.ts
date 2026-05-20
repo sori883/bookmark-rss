@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as DeviceRouteImport } from './routes/device'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app/index'
@@ -20,6 +21,11 @@ import { Route as AppBookmarksIdRouteImport } from './routes/app/bookmarks_.$id'
 import { Route as ApiMainSplatRouteImport } from './routes/api/main.$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
 
+const DeviceRoute = DeviceRouteImport.update({
+  id: '/device',
+  path: '/device',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
@@ -74,6 +80,7 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/device': typeof DeviceRoute
   '/app/articles': typeof AppArticlesRoute
   '/app/bookmarks': typeof AppBookmarksRoute
   '/app/feeds': typeof AppFeedsRoute
@@ -85,6 +92,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/device': typeof DeviceRoute
   '/app/articles': typeof AppArticlesRoute
   '/app/bookmarks': typeof AppBookmarksRoute
   '/app/feeds': typeof AppFeedsRoute
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/device': typeof DeviceRoute
   '/app/articles': typeof AppArticlesRoute
   '/app/bookmarks': typeof AppBookmarksRoute
   '/app/feeds': typeof AppFeedsRoute
@@ -112,6 +121,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
+    | '/device'
     | '/app/articles'
     | '/app/bookmarks'
     | '/app/feeds'
@@ -123,6 +133,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/device'
     | '/app/articles'
     | '/app/bookmarks'
     | '/app/feeds'
@@ -135,6 +146,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/app'
+    | '/device'
     | '/app/articles'
     | '/app/bookmarks'
     | '/app/feeds'
@@ -148,12 +160,20 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  DeviceRoute: typeof DeviceRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiMainSplatRoute: typeof ApiMainSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/device': {
+      id: '/device'
+      path: '/device'
+      fullPath: '/device'
+      preLoaderRoute: typeof DeviceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app': {
       id: '/app'
       path: '/app'
@@ -250,6 +270,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  DeviceRoute: DeviceRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiMainSplatRoute: ApiMainSplatRoute,
 }
