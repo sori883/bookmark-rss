@@ -8,6 +8,7 @@ interface Env {
   DATABASE_AUTH_TOKEN: string;
   ENCRYPTION_MASTER_KEY: string;
   WEB_BASE_URL: string;
+  CF_AI_GATEWAY_ID: string;
   AI: Ai;
 }
 
@@ -35,7 +36,7 @@ const buildGeminiClient = (env: Env) =>
             responseMimeType: "application/json",
           },
         },
-        { gateway: { id: "default" } },
+        { gateway: { id: env.CF_AI_GATEWAY_ID } },
       )) as GeminiResponse;
       const text = response.candidates?.[0]?.content?.parts?.[0]?.text;
       if (typeof text !== "string") {
