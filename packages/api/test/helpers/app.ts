@@ -15,6 +15,7 @@ import type { TestDb } from "./db";
 import type { TestUser } from "./seed";
 import { injectArticleFetcher } from "../../src/middleware/inject-article-fetcher";
 import { injectDb } from "../../src/middleware/inject-db";
+import { injectEncryptionKey } from "../../src/middleware/inject-encryption-key";
 import { injectFeedFetcher } from "../../src/middleware/inject-feed-fetcher";
 import { injectJobsDispatcher } from "../../src/middleware/inject-jobs-dispatcher";
 import { injectOgFetcher } from "../../src/middleware/inject-og-fetcher";
@@ -22,6 +23,7 @@ import { articlesRouter } from "../../src/routes/articles";
 import { bookmarksRouter } from "../../src/routes/bookmarks";
 import { categoriesRouter } from "../../src/routes/categories";
 import { feedsRouter } from "../../src/routes/feeds";
+import { preferencesRouter } from "../../src/routes/preferences";
 import { tagsRouter } from "../../src/routes/tags";
 
 export interface BuildTestAppOptions {
@@ -32,7 +34,11 @@ export interface BuildTestAppOptions {
   articleFetcher?: ArticleFetcher;
   bookmarkContentFetcher?: BookmarkContentFetcher;
   jobsDispatcher?: JobsDispatcher;
+  encryptionMasterKey?: string;
 }
+
+const TEST_ENCRYPTION_KEY =
+  "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
 
 /**
  * Default dispatcher used in tests — runs ingestion inline so assertions can
@@ -86,6 +92,7 @@ export const buildTestApp = ({
   articleFetcher,
   bookmarkContentFetcher,
   jobsDispatcher,
+  encryptionMasterKey = TEST_ENCRYPTION_KEY,
 }: BuildTestAppOptions) => {
   const feedF: FeedFetcher = feedFetcher ?? {
     fetchMetadata: (url: string) =>
@@ -109,6 +116,7 @@ export const buildTestApp = ({
     .use("*", injectOgFetcher(ogF))
     .use("*", injectArticleFetcher(articleF))
     .use("*", injectJobsDispatcher(jobsF))
+    .use("*", injectEncryptionKey(encryptionMasterKey))
     .use("*", async (c, next) => {
       c.set("user", (user ?? null) as never);
       c.set("session", null);
@@ -118,5 +126,6 @@ export const buildTestApp = ({
     .route("/articles", articlesRouter)
     .route("/bookmarks", bookmarksRouter)
     .route("/categories", categoriesRouter)
-    .route("/tags", tagsRouter);
+    .route("/tags", tagsRouter)
+    .route("/preferences", preferencesRouter);
 };

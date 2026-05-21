@@ -43,6 +43,13 @@
       "when": 1779329091860,
       "tag": "0005_dusty_risque",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1779334765843,
+      "tag": "0006_oval_shotgun",
+      "breakpoints": true
     }
   ]
 }

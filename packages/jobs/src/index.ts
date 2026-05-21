@@ -31,3 +31,4 @@ export {
   syncBookmarkFts,
 } from "./bookmark-fts";
 export { buildAndQuery, tokenize } from "./text-tokenizer";
+export { CryptoError, decryptSecret, encryptSecret } from "./crypto";

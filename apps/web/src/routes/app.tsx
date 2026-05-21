@@ -30,6 +30,7 @@ function AppLayout() {
         <TabLink to="/app/articles" label="Articles" />
         <TabLink to="/app/feeds" label="Feeds" />
         <TabLink to="/app/bookmarks" label="Bookmarks" />
+        <TabLink to="/app/settings" label="Settings" />
       </nav>
       <Outlet />
     </main>
@@ -40,7 +41,7 @@ function TabLink({
   to,
   label,
 }: {
-  to: "/app/articles" | "/app/feeds" | "/app/bookmarks";
+  to: "/app/articles" | "/app/feeds" | "/app/bookmarks" | "/app/settings";
   label: string;
 }) {
   return (

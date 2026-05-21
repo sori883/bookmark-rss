@@ -225,4 +225,36 @@ export const bookmarkRelations = relations(bookmark, ({ one }) => ({
   }),
 }));
 
+export const userPreference = sqliteTable(
+  "user_preference",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    recommendationEnabled: integer("recommendation_enabled", {
+      mode: "boolean",
+    })
+      .default(false)
+      .notNull(),
+    recommendationHour: integer("recommendation_hour").default(8).notNull(),
+    discordWebhookUrlEncrypted: text("discord_webhook_url_encrypted"),
+    createdAt: integer("created_at", { mode: "timestamp_ms" })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .notNull(),
+    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (t) => [uniqueIndex("user_preference_user_id_unique").on(t.userId)],
+);
+
+export const userPreferenceRelations = relations(userPreference, ({ one }) => ({
+  user: one(user, {
+    fields: [userPreference.userId],
+    references: [user.id],
+  }),
+}));
+
 export * from "./auth-schema";

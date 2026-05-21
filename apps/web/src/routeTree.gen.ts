@@ -13,6 +13,7 @@ import { Route as DeviceRouteImport } from './routes/device'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppSettingsRouteImport } from './routes/app/settings'
 import { Route as AppFeedsRouteImport } from './routes/app/feeds'
 import { Route as AppBookmarksRouteImport } from './routes/app/bookmarks'
 import { Route as AppArticlesRouteImport } from './routes/app/articles'
@@ -39,6 +40,11 @@ const IndexRoute = IndexRouteImport.update({
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => AppRoute,
 } as any)
 const AppFeedsRoute = AppFeedsRouteImport.update({
@@ -84,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/app/articles': typeof AppArticlesRoute
   '/app/bookmarks': typeof AppBookmarksRoute
   '/app/feeds': typeof AppFeedsRoute
+  '/app/settings': typeof AppSettingsRoute
   '/app/': typeof AppIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/main/$': typeof ApiMainSplatRoute
@@ -96,6 +103,7 @@ export interface FileRoutesByTo {
   '/app/articles': typeof AppArticlesRoute
   '/app/bookmarks': typeof AppBookmarksRoute
   '/app/feeds': typeof AppFeedsRoute
+  '/app/settings': typeof AppSettingsRoute
   '/app': typeof AppIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/main/$': typeof ApiMainSplatRoute
@@ -110,6 +118,7 @@ export interface FileRoutesById {
   '/app/articles': typeof AppArticlesRoute
   '/app/bookmarks': typeof AppBookmarksRoute
   '/app/feeds': typeof AppFeedsRoute
+  '/app/settings': typeof AppSettingsRoute
   '/app/': typeof AppIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/main/$': typeof ApiMainSplatRoute
@@ -125,6 +134,7 @@ export interface FileRouteTypes {
     | '/app/articles'
     | '/app/bookmarks'
     | '/app/feeds'
+    | '/app/settings'
     | '/app/'
     | '/api/auth/$'
     | '/api/main/$'
@@ -137,6 +147,7 @@ export interface FileRouteTypes {
     | '/app/articles'
     | '/app/bookmarks'
     | '/app/feeds'
+    | '/app/settings'
     | '/app'
     | '/api/auth/$'
     | '/api/main/$'
@@ -150,6 +161,7 @@ export interface FileRouteTypes {
     | '/app/articles'
     | '/app/bookmarks'
     | '/app/feeds'
+    | '/app/settings'
     | '/app/'
     | '/api/auth/$'
     | '/api/main/$'
@@ -193,6 +205,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/app/'
       preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/settings': {
+      id: '/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/feeds': {
@@ -251,6 +270,7 @@ interface AppRouteChildren {
   AppArticlesRoute: typeof AppArticlesRoute
   AppBookmarksRoute: typeof AppBookmarksRoute
   AppFeedsRoute: typeof AppFeedsRoute
+  AppSettingsRoute: typeof AppSettingsRoute
   AppIndexRoute: typeof AppIndexRoute
   AppBookmarksIdRoute: typeof AppBookmarksIdRoute
   AppFeedsIdRoute: typeof AppFeedsIdRoute
@@ -260,6 +280,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppArticlesRoute: AppArticlesRoute,
   AppBookmarksRoute: AppBookmarksRoute,
   AppFeedsRoute: AppFeedsRoute,
+  AppSettingsRoute: AppSettingsRoute,
   AppIndexRoute: AppIndexRoute,
   AppBookmarksIdRoute: AppBookmarksIdRoute,
   AppFeedsIdRoute: AppFeedsIdRoute,

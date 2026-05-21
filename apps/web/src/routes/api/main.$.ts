@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { env } from "cloudflare:workers";
 
 import {
   createApp,
@@ -18,6 +19,7 @@ const app = createApp({
   ogFetcher: createDefaultOgFetcher(),
   articleFetcher: createDefaultArticleFetcher(),
   jobsDispatcher,
+  encryptionMasterKey: env.ENCRYPTION_MASTER_KEY,
 });
 
 export const Route = createFileRoute("/api/main/$")({

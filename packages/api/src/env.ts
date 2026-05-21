@@ -39,5 +39,6 @@ export interface AppEnv {
     ogFetcher: OgFetcher;
     articleFetcher: ArticleFetcher;
     jobsDispatcher: JobsDispatcher;
+    encryptionMasterKey: string;
   };
 }

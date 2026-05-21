@@ -7,6 +7,7 @@ import type { ArticleFetcher } from "@acme/jobs";
 import type { AppEnv, FeedFetcher, JobsDispatcher, OgFetcher } from "./env";
 import { injectArticleFetcher } from "./middleware/inject-article-fetcher";
 import { injectDb } from "./middleware/inject-db";
+import { injectEncryptionKey } from "./middleware/inject-encryption-key";
 import { injectFeedFetcher } from "./middleware/inject-feed-fetcher";
 import { injectJobsDispatcher } from "./middleware/inject-jobs-dispatcher";
 import { injectOgFetcher } from "./middleware/inject-og-fetcher";
@@ -16,6 +17,7 @@ import { articlesRouter } from "./routes/articles";
 import { bookmarksRouter } from "./routes/bookmarks";
 import { categoriesRouter } from "./routes/categories";
 import { feedsRouter } from "./routes/feeds";
+import { preferencesRouter } from "./routes/preferences";
 import { tagsRouter } from "./routes/tags";
 
 export const createApp = (deps: {
@@ -25,6 +27,7 @@ export const createApp = (deps: {
   ogFetcher: OgFetcher;
   articleFetcher: ArticleFetcher;
   jobsDispatcher: JobsDispatcher;
+  encryptionMasterKey: string;
 }) =>
   new Hono<AppEnv>()
     .basePath("/api/main")
@@ -33,13 +36,15 @@ export const createApp = (deps: {
     .use("*", injectOgFetcher(deps.ogFetcher))
     .use("*", injectArticleFetcher(deps.articleFetcher))
     .use("*", injectJobsDispatcher(deps.jobsDispatcher))
+    .use("*", injectEncryptionKey(deps.encryptionMasterKey))
     .use("*", loadSession(deps.auth))
     .get("/me", requireAuth, (c) => c.json(c.get("user")))
     .route("/feeds", feedsRouter)
     .route("/articles", articlesRouter)
     .route("/bookmarks", bookmarksRouter)
     .route("/categories", categoriesRouter)
-    .route("/tags", tagsRouter);
+    .route("/tags", tagsRouter)
+    .route("/preferences", preferencesRouter);
 
 export type AppType = ReturnType<typeof createApp>;
 export type {
