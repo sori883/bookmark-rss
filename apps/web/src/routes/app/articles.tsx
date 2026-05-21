@@ -1,4 +1,9 @@
-import { Link, createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
+import {
+  Link,
+  createFileRoute,
+  useNavigate,
+  useRouter,
+} from "@tanstack/react-router";
 
 import { useToast } from "~/components/Toast";
 import { makeApiClient } from "~/lib/api-client";
@@ -10,9 +15,7 @@ interface ArticlesSearch {
   categoryId?: string;
 }
 
-const validateSearch = (
-  search: Record<string, unknown>,
-): ArticlesSearch => ({
+const validateSearch = (search: Record<string, unknown>): ArticlesSearch => ({
   unread: search.unread === true,
   categoryId:
     typeof search.categoryId === "string" && search.categoryId.length > 0
@@ -91,9 +94,7 @@ function ArticlesPage() {
     <div className="space-y-6">
       <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-sm)]">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <h2 className="text-sm font-semibold text-[var(--text)]">
-            記事一覧
-          </h2>
+          <h2 className="text-sm font-semibold text-[var(--text)]">記事一覧</h2>
           <div className="flex flex-wrap items-center gap-2">
             <select
               value={search.categoryId ?? ""}

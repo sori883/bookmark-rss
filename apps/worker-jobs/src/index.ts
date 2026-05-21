@@ -1,10 +1,11 @@
+import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { inArray } from "drizzle-orm";
-import { Hono } from "hono";
 import { z } from "zod";
 
-import { createDbClient } from "@acme/db/client";
 import type { DbType } from "@acme/db/client";
+import type { ArticleFetcher, BookmarkContentFetcher } from "@acme/jobs";
+import { createDbClient } from "@acme/db/client";
 import { bookmark, feed } from "@acme/db/schema";
 import {
   createDefaultArticleFetcher,
@@ -13,7 +14,6 @@ import {
   ingestFeedArticles,
   runFeedFetchJob,
 } from "@acme/jobs";
-import type { ArticleFetcher, BookmarkContentFetcher } from "@acme/jobs";
 
 interface Env {
   DATABASE_URL: string;
@@ -70,10 +70,7 @@ const runIngest = async (env: Env, feedIds: string[]): Promise<void> => {
   }
 };
 
-const runExtract = async (
-  env: Env,
-  bookmarkIds: string[],
-): Promise<void> => {
+const runExtract = async (env: Env, bookmarkIds: string[]): Promise<void> => {
   if (bookmarkIds.length === 0) return;
   const { db, contentFetcher } = buildDeps(env);
   const rows = await db

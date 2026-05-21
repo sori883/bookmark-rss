@@ -15,15 +15,12 @@ interface BookmarksSearch {
   q?: string;
 }
 
-const validateSearch = (
-  search: Record<string, unknown>,
-): BookmarksSearch => ({
+const validateSearch = (search: Record<string, unknown>): BookmarksSearch => ({
   tagId:
     typeof search.tagId === "string" && search.tagId.length > 0
       ? search.tagId
       : undefined,
-  q:
-    typeof search.q === "string" && search.q.length > 0 ? search.q : undefined,
+  q: typeof search.q === "string" && search.q.length > 0 ? search.q : undefined,
 });
 
 export const Route = createFileRoute("/app/bookmarks")({
@@ -238,7 +235,10 @@ function BookmarksPage() {
     void navigate({ search: (prev) => ({ ...prev, q: undefined }) });
   };
 
-  const onSetBookmarkTags = async (bookmarkId: string, tagIds: Array<string>) => {
+  const onSetBookmarkTags = async (
+    bookmarkId: string,
+    tagIds: Array<string>,
+  ) => {
     const api = makeApiClient();
     const res = await api.api.main.bookmarks[":id"].$patch({
       param: { id: bookmarkId },

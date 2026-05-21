@@ -63,7 +63,9 @@ export const bookmarkAddCommand = defineCommand({
     if (res.status === 201) {
       const created = (await res.json()) as { title: string; url: string };
       s.stop("Added.");
-      outro(`${pc.green("+")} ${pc.bold(created.title)}\n  ${pc.dim(created.url)}`);
+      outro(
+        `${pc.green("+")} ${pc.bold(created.title)}\n  ${pc.dim(created.url)}`,
+      );
       return;
     }
     if (res.status === 401) {

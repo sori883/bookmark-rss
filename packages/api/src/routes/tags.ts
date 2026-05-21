@@ -1,8 +1,7 @@
 import { randomUUID } from "node:crypto";
-
+import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { and, asc, eq, ne } from "drizzle-orm";
-import { Hono } from "hono";
 import { z } from "zod";
 
 import { bookmarkTag, tag } from "@acme/db/schema";
@@ -51,11 +50,7 @@ export const tagsRouter = new Hono<AppEnv>()
       }
       const id = randomUUID();
       await db.insert(tag).values({ id, userId: user.id, name });
-      const created = await db
-        .select()
-        .from(tag)
-        .where(eq(tag.id, id))
-        .get();
+      const created = await db.select().from(tag).where(eq(tag.id, id)).get();
       return c.json(created, 201);
     },
   )
@@ -85,23 +80,13 @@ export const tagsRouter = new Hono<AppEnv>()
       const conflict = await db
         .select({ id: tag.id })
         .from(tag)
-        .where(
-          and(
-            eq(tag.userId, user.id),
-            eq(tag.name, name),
-            ne(tag.id, id),
-          ),
-        )
+        .where(and(eq(tag.userId, user.id), eq(tag.name, name), ne(tag.id, id)))
         .get();
       if (conflict) {
         return c.json({ error: "Tag name already used" }, 409);
       }
       await db.update(tag).set({ name }).where(eq(tag.id, id));
-      const updated = await db
-        .select()
-        .from(tag)
-        .where(eq(tag.id, id))
-        .get();
+      const updated = await db.select().from(tag).where(eq(tag.id, id)).get();
       return c.json(updated);
     },
   )

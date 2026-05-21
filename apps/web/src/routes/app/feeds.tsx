@@ -395,9 +395,7 @@ function FeedsPage() {
                         type="text"
                         autoFocus
                         value={editingCategoryName}
-                        onChange={(e) =>
-                          setEditingCategoryName(e.target.value)
-                        }
+                        onChange={(e) => setEditingCategoryName(e.target.value)}
                         onKeyDown={(e) => {
                           if (e.key === "Escape") cancelEditingCategory();
                         }}

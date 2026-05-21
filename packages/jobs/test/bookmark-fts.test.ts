@@ -3,15 +3,15 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import { bookmark } from "@acme/db/schema";
 
+import type { TestDb } from "./helpers/db";
+import type { TestUser } from "./helpers/seed";
 import {
   removeBookmarkFts,
   removeBookmarkFtsMany,
   syncBookmarkFts,
 } from "../src/bookmark-fts";
 import { createTestDb } from "./helpers/db";
-import type { TestDb } from "./helpers/db";
 import { createTestUser } from "./helpers/seed";
-import type { TestUser } from "./helpers/seed";
 
 let db: TestDb;
 let user: TestUser;
@@ -21,10 +21,7 @@ beforeEach(async () => {
   user = await createTestUser(db);
 });
 
-const searchFts = async (
-  db: TestDb,
-  query: string,
-): Promise<string[]> => {
+const searchFts = async (db: TestDb, query: string): Promise<string[]> => {
   const rows = await db.all(
     sql.raw(
       `SELECT bookmark_id AS id FROM bookmark_fts WHERE bookmark_fts MATCH '${query}'`,

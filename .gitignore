@@ -15,6 +15,9 @@ coverage
 .nitro/
 .output/
 
+# wxt (Chrome extension build tool)
+.wxt/
+
 # expo
 .expo/
 expo-env.d.ts

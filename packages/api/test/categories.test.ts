@@ -3,11 +3,11 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import { category, feed } from "@acme/db/schema";
 
+import type { TestDb } from "./helpers/db";
+import type { TestUser } from "./helpers/seed";
 import { buildTestApp } from "./helpers/app";
 import { createTestDb } from "./helpers/db";
-import type { TestDb } from "./helpers/db";
 import { createTestUser } from "./helpers/seed";
-import type { TestUser } from "./helpers/seed";
 
 let db: TestDb;
 let user: TestUser;
@@ -117,9 +117,7 @@ describe("PATCH /categories/:id", () => {
 
   it("returns 404 when not owned", async () => {
     const other = await createTestUser(db, { email: "x@example.com" });
-    await db
-      .insert(category)
-      .values({ id: "c1", userId: other.id, name: "X" });
+    await db.insert(category).values({ id: "c1", userId: other.id, name: "X" });
     const app = buildTestApp({ db, user });
     const res = await app.request("/categories/c1", {
       method: "PATCH",
@@ -167,9 +165,7 @@ describe("DELETE /categories/:id", () => {
 
   it("returns 404 when not owned", async () => {
     const other = await createTestUser(db, { email: "x@example.com" });
-    await db
-      .insert(category)
-      .values({ id: "c1", userId: other.id, name: "X" });
+    await db.insert(category).values({ id: "c1", userId: other.id, name: "X" });
     const app = buildTestApp({ db, user });
     const res = await app.request("/categories/c1", { method: "DELETE" });
     expect(res.status).toBe(404);

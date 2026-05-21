@@ -22,11 +22,14 @@ export const jobsDispatcher: JobsDispatcher = {
   },
   async triggerBookmarkExtract(bookmarkIds) {
     if (bookmarkIds.length === 0) return;
-    const res = await env.JOBS.fetch("https://jobs.internal/extract-bookmarks", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ bookmarkIds }),
-    });
+    const res = await env.JOBS.fetch(
+      "https://jobs.internal/extract-bookmarks",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ bookmarkIds }),
+      },
+    );
     if (!res.ok) {
       throw new Error(`jobs dispatch failed: ${res.status}`);
     }

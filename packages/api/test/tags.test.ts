@@ -3,11 +3,11 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import { bookmark, bookmarkTag, tag } from "@acme/db/schema";
 
+import type { TestDb } from "./helpers/db";
+import type { TestUser } from "./helpers/seed";
 import { buildTestApp } from "./helpers/app";
 import { createTestDb } from "./helpers/db";
-import type { TestDb } from "./helpers/db";
 import { createTestUser } from "./helpers/seed";
-import type { TestUser } from "./helpers/seed";
 
 let db: TestDb;
 let user: TestUser;

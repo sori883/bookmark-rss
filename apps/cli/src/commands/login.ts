@@ -2,13 +2,14 @@ import { cancel, intro, log, outro, spinner } from "@clack/prompts";
 import { defineCommand } from "citty";
 import pc from "picocolors";
 
-import { openInBrowser } from "../lib/browser.ts";
-import { saveConfig } from "../lib/config.ts";
 import {
   DeviceFlowError,
   pollDeviceToken,
   requestDeviceCode,
-} from "../lib/device-flow.ts";
+} from "@acme/auth-client";
+
+import { openInBrowser } from "../lib/browser.ts";
+import { saveConfig } from "../lib/config.ts";
 import { MissingBaseUrlError, getBaseUrl } from "../lib/env.ts";
 
 const CLIENT_ID = "bookmark-cli";
@@ -28,7 +29,9 @@ export const loginCommand = defineCommand({
     try {
       baseUrl = getBaseUrl();
     } catch (err) {
-      cancel(err instanceof MissingBaseUrlError ? err.message : "Invalid base URL");
+      cancel(
+        err instanceof MissingBaseUrlError ? err.message : "Invalid base URL",
+      );
       process.exitCode = 1;
       return;
     }

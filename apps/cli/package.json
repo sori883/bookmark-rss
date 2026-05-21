@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@acme/api": "workspace:*",
+    "@acme/auth-client": "workspace:*",
     "@clack/prompts": "^0.11.0",
     "citty": "^0.1.6",
     "hono": "^4.12.18",

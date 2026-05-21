@@ -92,13 +92,13 @@ const submitDevice = async (
   if (res.ok) {
     return { ok: true };
   }
-  const body = (await res.json().catch(() => null)) as
-    | { error_description?: string; message?: string }
-    | null;
+  const body = (await res.json().catch(() => null)) as {
+    error_description?: string;
+    message?: string;
+  } | null;
   return {
     ok: false,
-    message:
-      body?.error_description ?? body?.message ?? `HTTP ${res.status}`,
+    message: body?.error_description ?? body?.message ?? `HTTP ${res.status}`,
   };
 };
 
@@ -212,13 +212,7 @@ function ApprovalPanel({ initialCode }: { initialCode: string }) {
   );
 }
 
-function ResultPanel({
-  title,
-  message,
-}: {
-  title: string;
-  message: string;
-}) {
+function ResultPanel({ title, message }: { title: string; message: string }) {
   return (
     <main className="page-wrap flex min-h-[60vh] items-center justify-center py-12">
       <div className="w-full max-w-md overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] p-8 text-center shadow-[var(--shadow-md)]">

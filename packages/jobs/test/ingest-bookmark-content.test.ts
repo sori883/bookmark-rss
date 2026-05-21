@@ -4,11 +4,11 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { bookmark } from "@acme/db/schema";
 
 import type { BookmarkContentFetcher } from "../src/bookmark-content-fetcher";
+import type { TestDb } from "./helpers/db";
+import type { TestUser } from "./helpers/seed";
 import { ingestBookmarkContent } from "../src/ingest-bookmark-content";
 import { createTestDb } from "./helpers/db";
-import type { TestDb } from "./helpers/db";
 import { createTestUser } from "./helpers/seed";
-import type { TestUser } from "./helpers/seed";
 
 let db: TestDb;
 let user: TestUser;

@@ -52,9 +52,7 @@ describe("extractMarkdownFromHtml", () => {
       "https://example.com/blog/post-1",
     );
     expect(result?.markdown).toContain("https://example.com/img/cover.png");
-    expect(result?.markdown).toContain(
-      "https://example.com/blog/other.html",
-    );
+    expect(result?.markdown).toContain("https://example.com/blog/other.html");
   });
 
   it("leaves already-absolute URLs untouched", () => {

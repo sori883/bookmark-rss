@@ -118,7 +118,10 @@ describe("GET /articles?categoryId=", () => {
       userId: user.id,
       name: "Tech",
     });
-    await db.update(feed).set({ categoryId: "cat-1" }).where(eq(feed.id, "feed-a"));
+    await db
+      .update(feed)
+      .set({ categoryId: "cat-1" })
+      .where(eq(feed.id, "feed-a"));
   });
 
   it("returns only articles whose feed belongs to the category", async () => {

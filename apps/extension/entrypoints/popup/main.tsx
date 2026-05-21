@@ -1,0 +1,17 @@
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+import "./style.css";
+
+import { App } from "./App";
+
+const root = document.getElementById("root");
+if (!root) {
+  throw new Error("Popup root element not found");
+}
+
+ReactDOM.createRoot(root).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);

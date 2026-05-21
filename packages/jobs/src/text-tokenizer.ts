@@ -20,7 +20,10 @@ const segmenter = new Intl.Segmenter("ja", { granularity: "word" });
  * - 長音記号統一 (U+30FC vs U+FF70 vs hyphen variants)
  */
 const normalize = (text: string): string =>
-  text.normalize("NFKC").toLowerCase().replace(/[ー－—–]/g, "ー");
+  text
+    .normalize("NFKC")
+    .toLowerCase()
+    .replace(/[ー－—–]/g, "ー");
 
 /**
  * Tokenize text into a single whitespace-separated string of word-like tokens.

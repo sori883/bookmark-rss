@@ -38,9 +38,7 @@ export const removeBookmarkFts = async (
   db: DbType,
   bookmarkId: string,
 ): Promise<void> => {
-  await db.run(
-    sql`DELETE FROM bookmark_fts WHERE bookmark_id = ${bookmarkId}`,
-  );
+  await db.run(sql`DELETE FROM bookmark_fts WHERE bookmark_id = ${bookmarkId}`);
 };
 
 export const removeBookmarkFtsMany = async (

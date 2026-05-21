@@ -10,7 +10,8 @@ const articleHtml = `<!doctype html>
   <p>Here is some additional content to ensure the algorithm recognizes this as the main article body.</p>
 </article></body></html>`;
 
-const makeFetchOk = (body: string, contentType = "text/html"): typeof fetch =>
+const makeFetchOk =
+  (body: string, contentType = "text/html"): typeof fetch =>
   () =>
     Promise.resolve(
       new Response(body, {
@@ -40,9 +41,7 @@ describe("defaultBookmarkContentFetcher", () => {
 
   it("throws when no content can be extracted", async () => {
     const fetcher = createDefaultBookmarkContentFetcher({
-      fetchImpl: makeFetchOk(
-        "<!doctype html><html><body></body></html>",
-      ),
+      fetchImpl: makeFetchOk("<!doctype html><html><body></body></html>"),
     });
     await expect(fetcher.fetch("https://example.com")).rejects.toThrow();
   });

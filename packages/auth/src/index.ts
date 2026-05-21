@@ -1,7 +1,7 @@
 import type { BetterAuthOptions, BetterAuthPlugin } from "better-auth";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { bearer, deviceAuthorization } from "better-auth/plugins";
+import { bearer, deviceAuthorization, jwt } from "better-auth/plugins";
 
 import type { DbType } from "@acme/db/client";
 import * as schema from "@acme/db/schema";
@@ -24,10 +24,15 @@ export function initAuth<
     }),
     baseURL: options.authUrl,
     secret: options.secret,
-    trustedOrigins: [options.trustedUrl],
+    trustedOrigins: [options.trustedUrl, "chrome-extension://*"],
     plugins: [
       bearer(),
       deviceAuthorization({ schema: {} }),
+      jwt({
+        jwt: {
+          definePayload: ({ user }) => ({ id: user.id }),
+        },
+      }),
       ...(options.extraPlugins ?? []),
     ],
     socialProviders: {

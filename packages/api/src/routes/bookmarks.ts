@@ -1,8 +1,7 @@
 import { randomUUID } from "node:crypto";
-
+import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { and, desc, eq, inArray, sql } from "drizzle-orm";
-import { Hono } from "hono";
 import { z } from "zod";
 
 import { article, bookmark, bookmarkTag, tag } from "@acme/db/schema";
@@ -43,7 +42,9 @@ const collectTagsByBookmark = async (
   db: AppEnv["Variables"]["db"],
   bookmarkIds: string[],
 ): Promise<Map<string, TagSummary[]>> => {
-  if (bookmarkIds.length === 0) {return new Map();}
+  if (bookmarkIds.length === 0) {
+    return new Map();
+  }
   const rows = await db
     .select({
       bookmarkId: bookmarkTag.bookmarkId,
@@ -70,7 +71,9 @@ const assertTagsOwned = async (
   userId: string,
   tagIds: string[],
 ): Promise<boolean> => {
-  if (tagIds.length === 0) {return true;}
+  if (tagIds.length === 0) {
+    return true;
+  }
   const owned = await db
     .select({ id: tag.id })
     .from(tag)
@@ -93,7 +96,9 @@ export const bookmarksRouter = new Hono<AppEnv>()
     // bookmark rows and re-order by FTS bm25 score.
     if (q) {
       const ftsExpr = buildAndQuery(q);
-      if (!ftsExpr) {return c.json([]);}
+      if (!ftsExpr) {
+        return c.json([]);
+      }
       const matchedRaw = await db.all(sql`
         SELECT bookmark_id AS id, bm25(bookmark_fts) AS score
         FROM bookmark_fts
@@ -131,7 +136,10 @@ export const bookmarksRouter = new Hono<AppEnv>()
           .innerJoin(bookmarkTag, eq(bookmarkTag.bookmarkId, bookmark.id))
           .where(and(...conditions, eq(bookmarkTag.tagId, tagId)));
       } else {
-        rows = await db.select().from(bookmark).where(and(...conditions));
+        rows = await db
+          .select()
+          .from(bookmark)
+          .where(and(...conditions));
       }
 
       rows.sort(
@@ -403,9 +411,7 @@ export const bookmarksRouter = new Hono<AppEnv>()
       }
       const db = c.get("db");
       const { ids } = c.req.valid("json");
-      await db
-        .delete(bookmarkTag)
-        .where(inArray(bookmarkTag.bookmarkId, ids));
+      await db.delete(bookmarkTag).where(inArray(bookmarkTag.bookmarkId, ids));
       const result = await db
         .delete(bookmark)
         .where(and(eq(bookmark.userId, user.id), inArray(bookmark.id, ids)))

@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { article, category, feed } from "@acme/db/schema";
 import type { ArticleFetcher } from "@acme/jobs";
+import { article, category, feed } from "@acme/db/schema";
 
 import type { FeedFetcher } from "../src/env";
 import type { TestDb } from "./helpers/db";
@@ -588,9 +588,24 @@ describe("POST /feeds/bulk-update-category", () => {
       name: "Tech",
     });
     await db.insert(feed).values([
-      { id: "f1", userId: user.id, url: "https://a.example.com/rss", title: "A" },
-      { id: "f2", userId: user.id, url: "https://b.example.com/rss", title: "B" },
-      { id: "f3", userId: user.id, url: "https://c.example.com/rss", title: "C" },
+      {
+        id: "f1",
+        userId: user.id,
+        url: "https://a.example.com/rss",
+        title: "A",
+      },
+      {
+        id: "f2",
+        userId: user.id,
+        url: "https://b.example.com/rss",
+        title: "B",
+      },
+      {
+        id: "f3",
+        userId: user.id,
+        url: "https://c.example.com/rss",
+        title: "C",
+      },
     ]);
     const app = buildTestApp({ db, user });
     const res = await app.request("/feeds/bulk-update-category", {
@@ -647,8 +662,18 @@ describe("POST /feeds/bulk-update-category", () => {
       name: "Tech",
     });
     await db.insert(feed).values([
-      { id: "f1", userId: user.id, url: "https://a.example.com/rss", title: "A" },
-      { id: "f2", userId: other.id, url: "https://b.example.com/rss", title: "B" },
+      {
+        id: "f1",
+        userId: user.id,
+        url: "https://a.example.com/rss",
+        title: "A",
+      },
+      {
+        id: "f2",
+        userId: other.id,
+        url: "https://b.example.com/rss",
+        title: "B",
+      },
     ]);
     const app = buildTestApp({ db, user });
     const res = await app.request("/feeds/bulk-update-category", {

@@ -1,9 +1,9 @@
-import { inArray } from "drizzle-orm";
 import { Hono } from "hono";
+import { inArray } from "drizzle-orm";
 
+import type { ArticleFetcher, BookmarkContentFetcher } from "@acme/jobs";
 import { bookmark, feed } from "@acme/db/schema";
 import { ingestBookmarkContent, ingestFeedArticles } from "@acme/jobs";
-import type { ArticleFetcher, BookmarkContentFetcher } from "@acme/jobs";
 
 import type {
   AppEnv,
@@ -11,6 +11,8 @@ import type {
   JobsDispatcher,
   OgFetcher,
 } from "../../src/env";
+import type { TestDb } from "./db";
+import type { TestUser } from "./seed";
 import { injectArticleFetcher } from "../../src/middleware/inject-article-fetcher";
 import { injectDb } from "../../src/middleware/inject-db";
 import { injectFeedFetcher } from "../../src/middleware/inject-feed-fetcher";
@@ -21,8 +23,6 @@ import { bookmarksRouter } from "../../src/routes/bookmarks";
 import { categoriesRouter } from "../../src/routes/categories";
 import { feedsRouter } from "../../src/routes/feeds";
 import { tagsRouter } from "../../src/routes/tags";
-import type { TestDb } from "./db";
-import type { TestUser } from "./seed";
 
 export interface BuildTestAppOptions {
   db: TestDb;

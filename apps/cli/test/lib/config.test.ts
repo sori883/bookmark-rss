@@ -1,7 +1,6 @@
 import { mkdtemp, readFile, rm, stat } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import {
@@ -94,9 +93,11 @@ describe("saveConfig", () => {
   });
 
   it("tightens permissions on an existing 0644 file", async () => {
-    const { mkdir, writeFile, chmod: fsChmod } = await import(
-      "node:fs/promises"
-    );
+    const {
+      mkdir,
+      writeFile,
+      chmod: fsChmod,
+    } = await import("node:fs/promises");
     const path = getConfigPath();
     await mkdir(join(tempHome, ".config", "bookmark-rss"), {
       recursive: true,

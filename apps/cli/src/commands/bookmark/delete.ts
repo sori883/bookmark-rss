@@ -1,4 +1,11 @@
-import { cancel, confirm, intro, isCancel, outro, spinner } from "@clack/prompts";
+import {
+  cancel,
+  confirm,
+  intro,
+  isCancel,
+  outro,
+  spinner,
+} from "@clack/prompts";
 import { defineCommand } from "citty";
 import pc from "picocolors";
 

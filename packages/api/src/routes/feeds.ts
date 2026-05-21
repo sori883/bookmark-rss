@@ -220,9 +220,7 @@ export const feedsRouter = new Hono<AppEnv>()
         const cat = await db
           .select({ id: category.id })
           .from(category)
-          .where(
-            and(eq(category.id, categoryId), eq(category.userId, user.id)),
-          )
+          .where(and(eq(category.id, categoryId), eq(category.userId, user.id)))
           .get();
         if (!cat) {
           return c.json({ error: "Invalid categoryId" }, 400);
@@ -266,9 +264,7 @@ export const feedsRouter = new Hono<AppEnv>()
         const cat = await db
           .select({ id: category.id })
           .from(category)
-          .where(
-            and(eq(category.id, categoryId), eq(category.userId, user.id)),
-          )
+          .where(and(eq(category.id, categoryId), eq(category.userId, user.id)))
           .get();
         if (!cat) {
           return c.json({ error: "Invalid categoryId" }, 400);
@@ -276,11 +272,7 @@ export const feedsRouter = new Hono<AppEnv>()
       }
 
       await db.update(feed).set({ categoryId }).where(eq(feed.id, id));
-      const updated = await db
-        .select()
-        .from(feed)
-        .where(eq(feed.id, id))
-        .get();
+      const updated = await db.select().from(feed).where(eq(feed.id, id)).get();
       return c.json(updated);
     },
   )

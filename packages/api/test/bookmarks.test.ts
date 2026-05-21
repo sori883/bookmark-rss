@@ -377,18 +377,20 @@ describe("GET /bookmarks?q= (full-text search)", () => {
       user,
       ogFetcher: {
         fetch: (url) => {
-          if (url.endsWith("/tokyo"))
-            {return Promise.resolve({
+          if (url.endsWith("/tokyo")) {
+            return Promise.resolve({
               title: "東京タワー観光",
               description: "東京の名所",
               imageUrl: null,
-            });}
-          if (url.endsWith("/kyoto"))
-            {return Promise.resolve({
+            });
+          }
+          if (url.endsWith("/kyoto")) {
+            return Promise.resolve({
               title: "京都の寺院",
               description: "古都の風景",
               imageUrl: null,
-            });}
+            });
+          }
           return Promise.resolve({
             title: "React Tutorial",
             description: "TypeScript and hooks",
@@ -412,9 +414,7 @@ describe("GET /bookmarks?q= (full-text search)", () => {
 
   it("matches Japanese term against title", async () => {
     const app = buildTestApp({ db, user });
-    const res = await app.request(
-      `/bookmarks?q=${encodeURIComponent("東京")}`,
-    );
+    const res = await app.request(`/bookmarks?q=${encodeURIComponent("東京")}`);
     expect(res.status).toBe(200);
     const body = (await res.json()) as { title: string }[];
     expect(body.map((b) => b.title)).toEqual(["東京タワー観光"]);
@@ -429,17 +429,13 @@ describe("GET /bookmarks?q= (full-text search)", () => {
 
   it("returns empty array for no matches", async () => {
     const app = buildTestApp({ db, user });
-    const res = await app.request(
-      `/bookmarks?q=${encodeURIComponent("沖縄")}`,
-    );
+    const res = await app.request(`/bookmarks?q=${encodeURIComponent("沖縄")}`);
     expect(await res.json()).toEqual([]);
   });
 
   it("returns empty array when query has no usable tokens", async () => {
     const app = buildTestApp({ db, user });
-    const res = await app.request(
-      `/bookmarks?q=${encodeURIComponent("、。")}`,
-    );
+    const res = await app.request(`/bookmarks?q=${encodeURIComponent("、。")}`);
     expect(await res.json()).toEqual([]);
   });
 
@@ -452,9 +448,7 @@ describe("GET /bookmarks?q= (full-text search)", () => {
       throw new Error("setup: tokyo bookmark missing");
     }
     await db.insert(tag).values({ id: "t1", userId: user.id, name: "trip" });
-    await db
-      .insert(bookmarkTag)
-      .values({ bookmarkId: tokyo.id, tagId: "t1" });
+    await db.insert(bookmarkTag).values({ bookmarkId: tokyo.id, tagId: "t1" });
 
     const app = buildTestApp({ db, user });
     const res = await app.request(
@@ -467,9 +461,7 @@ describe("GET /bookmarks?q= (full-text search)", () => {
   it("does not leak other users' bookmarks", async () => {
     const other = await createTestUser(db, { email: "x@example.com" });
     const app = buildTestApp({ db, user: other });
-    const res = await app.request(
-      `/bookmarks?q=${encodeURIComponent("東京")}`,
-    );
+    const res = await app.request(`/bookmarks?q=${encodeURIComponent("東京")}`);
     expect(await res.json()).toEqual([]);
   });
 });
@@ -648,9 +640,7 @@ describe("POST /bookmarks/bulk-add-tags", () => {
 
     const allLinks = await db.select().from(bookmarkTag);
     const pairs = new Set(allLinks.map((l) => `${l.bookmarkId}::${l.tagId}`));
-    expect(pairs).toEqual(
-      new Set(["b1::t1", "b1::t2", "b2::t1", "b2::t2"]),
-    );
+    expect(pairs).toEqual(new Set(["b1::t1", "b1::t2", "b2::t1", "b2::t2"]));
   });
 
   it("skips bookmarks not owned by the user", async () => {

@@ -4,7 +4,7 @@ import {
   DeviceFlowError,
   pollDeviceToken,
   requestDeviceCode,
-} from "../../src/lib/device-flow.ts";
+} from "../src/device-flow";
 
 const okJson = (body: unknown) =>
   new Response(JSON.stringify(body), {

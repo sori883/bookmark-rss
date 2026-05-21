@@ -11,9 +11,7 @@ const config = defineConfig({
     devtools(),
     cloudflare({
       viteEnvironment: { name: "ssr" },
-      auxiliaryWorkers: [
-        { configPath: "../worker-jobs/wrangler.jsonc" },
-      ],
+      auxiliaryWorkers: [{ configPath: "../worker-jobs/wrangler.jsonc" }],
     }),
     tailwindcss(),
     tanstackStart(),
