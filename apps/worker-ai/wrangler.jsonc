@@ -9,4 +9,7 @@
   "triggers": {
     "crons": ["0 * * * *"],
   },
+  "ai": {
+    "binding": "AI",
+  },
 }
