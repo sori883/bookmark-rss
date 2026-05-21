@@ -32,3 +32,28 @@ export {
 } from "./bookmark-fts";
 export { buildAndQuery, tokenize } from "./text-tokenizer";
 export { CryptoError, decryptSecret, encryptSecret } from "./crypto";
+export type {
+  GenerateRecommendationsParams,
+  RecommendationPick,
+  VertexGeminiClient,
+  VertexGeminiConfig,
+} from "./recommend/vertex-gemini";
+export {
+  VertexGeminiError,
+  createVertexGeminiClient,
+} from "./recommend/vertex-gemini";
+export type {
+  RecommendationEmbedItem,
+  SendRecommendationParams,
+} from "./recommend/discord-notifier";
+export {
+  DiscordNotifierError,
+  DiscordWebhookGoneError,
+  DiscordWebhookRateLimitedError,
+  sendRecommendationDiscord,
+} from "./recommend/discord-notifier";
+export type {
+  RunDailyRecommendDeps,
+  RunDailyRecommendResult,
+} from "./recommend/run-daily-recommend";
+export { runDailyRecommendJob } from "./recommend/run-daily-recommend";

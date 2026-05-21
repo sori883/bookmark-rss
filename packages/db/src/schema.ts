@@ -257,4 +257,76 @@ export const userPreferenceRelations = relations(userPreference, ({ one }) => ({
   }),
 }));
 
+export const recommendation = sqliteTable(
+  "recommendation",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    date: text("date").notNull(),
+    generatedAt: integer("generated_at", { mode: "timestamp_ms" })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .notNull(),
+    createdAt: integer("created_at", { mode: "timestamp_ms" })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .notNull(),
+  },
+  (t) => [
+    index("recommendation_user_id_idx").on(t.userId),
+    uniqueIndex("recommendation_user_date_unique").on(t.userId, t.date),
+  ],
+);
+
+export const recommendationItem = sqliteTable(
+  "recommendation_item",
+  {
+    id: text("id").primaryKey(),
+    recommendationId: text("recommendation_id")
+      .notNull()
+      .references(() => recommendation.id, { onDelete: "cascade" }),
+    articleId: text("article_id")
+      .notNull()
+      .references(() => article.id, { onDelete: "cascade" }),
+    source: text("source", { enum: ["ai", "random"] }).notNull(),
+    rank: integer("rank").notNull(),
+    reason: text("reason"),
+    createdAt: integer("created_at", { mode: "timestamp_ms" })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .notNull(),
+  },
+  (t) => [
+    index("recommendation_item_recommendation_id_idx").on(t.recommendationId),
+    uniqueIndex("recommendation_item_recommendation_rank_unique").on(
+      t.recommendationId,
+      t.rank,
+    ),
+  ],
+);
+
+export const recommendationRelations = relations(
+  recommendation,
+  ({ one, many }) => ({
+    user: one(user, {
+      fields: [recommendation.userId],
+      references: [user.id],
+    }),
+    items: many(recommendationItem),
+  }),
+);
+
+export const recommendationItemRelations = relations(
+  recommendationItem,
+  ({ one }) => ({
+    recommendation: one(recommendation, {
+      fields: [recommendationItem.recommendationId],
+      references: [recommendation.id],
+    }),
+    article: one(article, {
+      fields: [recommendationItem.articleId],
+      references: [article.id],
+    }),
+  }),
+);
+
 export * from "./auth-schema";

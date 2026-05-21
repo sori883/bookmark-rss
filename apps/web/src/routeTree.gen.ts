@@ -17,6 +17,7 @@ import { Route as AppSettingsRouteImport } from './routes/app/settings'
 import { Route as AppFeedsRouteImport } from './routes/app/feeds'
 import { Route as AppBookmarksRouteImport } from './routes/app/bookmarks'
 import { Route as AppArticlesRouteImport } from './routes/app/articles'
+import { Route as AppRecommendationsTodayRouteImport } from './routes/app/recommendations_.today'
 import { Route as AppFeedsIdRouteImport } from './routes/app/feeds_.$id'
 import { Route as AppBookmarksIdRouteImport } from './routes/app/bookmarks_.$id'
 import { Route as ApiMainSplatRouteImport } from './routes/api/main.$'
@@ -62,6 +63,11 @@ const AppArticlesRoute = AppArticlesRouteImport.update({
   path: '/articles',
   getParentRoute: () => AppRoute,
 } as any)
+const AppRecommendationsTodayRoute = AppRecommendationsTodayRouteImport.update({
+  id: '/recommendations_/today',
+  path: '/recommendations/today',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppFeedsIdRoute = AppFeedsIdRouteImport.update({
   id: '/feeds_/$id',
   path: '/feeds/$id',
@@ -96,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/api/main/$': typeof ApiMainSplatRoute
   '/app/bookmarks/$id': typeof AppBookmarksIdRoute
   '/app/feeds/$id': typeof AppFeedsIdRoute
+  '/app/recommendations/today': typeof AppRecommendationsTodayRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/api/main/$': typeof ApiMainSplatRoute
   '/app/bookmarks/$id': typeof AppBookmarksIdRoute
   '/app/feeds/$id': typeof AppFeedsIdRoute
+  '/app/recommendations/today': typeof AppRecommendationsTodayRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -124,6 +132,7 @@ export interface FileRoutesById {
   '/api/main/$': typeof ApiMainSplatRoute
   '/app/bookmarks_/$id': typeof AppBookmarksIdRoute
   '/app/feeds_/$id': typeof AppFeedsIdRoute
+  '/app/recommendations_/today': typeof AppRecommendationsTodayRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -140,6 +149,7 @@ export interface FileRouteTypes {
     | '/api/main/$'
     | '/app/bookmarks/$id'
     | '/app/feeds/$id'
+    | '/app/recommendations/today'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -153,6 +163,7 @@ export interface FileRouteTypes {
     | '/api/main/$'
     | '/app/bookmarks/$id'
     | '/app/feeds/$id'
+    | '/app/recommendations/today'
   id:
     | '__root__'
     | '/'
@@ -167,6 +178,7 @@ export interface FileRouteTypes {
     | '/api/main/$'
     | '/app/bookmarks_/$id'
     | '/app/feeds_/$id'
+    | '/app/recommendations_/today'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -235,6 +247,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppArticlesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/recommendations_/today': {
+      id: '/app/recommendations_/today'
+      path: '/recommendations/today'
+      fullPath: '/app/recommendations/today'
+      preLoaderRoute: typeof AppRecommendationsTodayRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/feeds_/$id': {
       id: '/app/feeds_/$id'
       path: '/feeds/$id'
@@ -274,6 +293,7 @@ interface AppRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
   AppBookmarksIdRoute: typeof AppBookmarksIdRoute
   AppFeedsIdRoute: typeof AppFeedsIdRoute
+  AppRecommendationsTodayRoute: typeof AppRecommendationsTodayRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -284,6 +304,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppIndexRoute: AppIndexRoute,
   AppBookmarksIdRoute: AppBookmarksIdRoute,
   AppFeedsIdRoute: AppFeedsIdRoute,
+  AppRecommendationsTodayRoute: AppRecommendationsTodayRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

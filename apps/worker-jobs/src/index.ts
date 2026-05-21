@@ -10,14 +10,23 @@ import { bookmark, feed } from "@acme/db/schema";
 import {
   createDefaultArticleFetcher,
   createDefaultBookmarkContentFetcher,
+  createVertexGeminiClient,
   ingestBookmarkContent,
   ingestFeedArticles,
+  runDailyRecommendJob,
   runFeedFetchJob,
 } from "@acme/jobs";
 
 interface Env {
   DATABASE_URL: string;
   DATABASE_AUTH_TOKEN: string;
+  ENCRYPTION_MASTER_KEY: string;
+  GCP_PROJECT_ID: string;
+  GCP_SERVICE_ACCOUNT_EMAIL: string;
+  GCP_SERVICE_ACCOUNT_PRIVATE_KEY: string;
+  VERTEX_AI_LOCATION: string;
+  VERTEX_AI_MODEL: string;
+  WEB_BASE_URL: string;
 }
 
 interface Deps {
@@ -46,6 +55,26 @@ const runAll = async (env: Env): Promise<void> => {
   });
   console.log(
     `[feed-fetch] processed=${result.feedsProcessed} failed=${result.feedsFailed} inserted=${result.articlesInserted}`,
+  );
+};
+
+const runRecommend = async (env: Env): Promise<void> => {
+  const { db } = buildDeps(env);
+  const gemini = createVertexGeminiClient({
+    projectId: env.GCP_PROJECT_ID,
+    location: env.VERTEX_AI_LOCATION,
+    model: env.VERTEX_AI_MODEL,
+    serviceAccountEmail: env.GCP_SERVICE_ACCOUNT_EMAIL,
+    serviceAccountPrivateKey: env.GCP_SERVICE_ACCOUNT_PRIVATE_KEY,
+  });
+  const result = await runDailyRecommendJob({
+    db,
+    gemini,
+    encryptionMasterKey: env.ENCRYPTION_MASTER_KEY,
+    webBaseUrl: env.WEB_BASE_URL,
+  });
+  console.log(
+    `[recommend] processed=${result.processed} skipped=${result.skipped} failed=${result.failed}`,
   );
 };
 
@@ -136,5 +165,6 @@ export default {
   fetch: app.fetch,
   scheduled(_event, env, ctx) {
     ctx.waitUntil(runAll(env));
+    ctx.waitUntil(runRecommend(env));
   },
 } satisfies ExportedHandler<Env>;

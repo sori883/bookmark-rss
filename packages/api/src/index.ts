@@ -18,6 +18,7 @@ import { bookmarksRouter } from "./routes/bookmarks";
 import { categoriesRouter } from "./routes/categories";
 import { feedsRouter } from "./routes/feeds";
 import { preferencesRouter } from "./routes/preferences";
+import { recommendationsRouter } from "./routes/recommendations";
 import { tagsRouter } from "./routes/tags";
 
 export const createApp = (deps: {
@@ -44,7 +45,8 @@ export const createApp = (deps: {
     .route("/bookmarks", bookmarksRouter)
     .route("/categories", categoriesRouter)
     .route("/tags", tagsRouter)
-    .route("/preferences", preferencesRouter);
+    .route("/preferences", preferencesRouter)
+    .route("/recommendations", recommendationsRouter);
 
 export type AppType = ReturnType<typeof createApp>;
 export type {

@@ -24,6 +24,7 @@ import { bookmarksRouter } from "../../src/routes/bookmarks";
 import { categoriesRouter } from "../../src/routes/categories";
 import { feedsRouter } from "../../src/routes/feeds";
 import { preferencesRouter } from "../../src/routes/preferences";
+import { recommendationsRouter } from "../../src/routes/recommendations";
 import { tagsRouter } from "../../src/routes/tags";
 
 export interface BuildTestAppOptions {
@@ -127,5 +128,6 @@ export const buildTestApp = ({
     .route("/bookmarks", bookmarksRouter)
     .route("/categories", categoriesRouter)
     .route("/tags", tagsRouter)
-    .route("/preferences", preferencesRouter);
+    .route("/preferences", preferencesRouter)
+    .route("/recommendations", recommendationsRouter);
 };
