@@ -1,7 +1,13 @@
 import { Hono } from "hono";
 import { and, asc, eq } from "drizzle-orm";
 
-import { article, recommendation, recommendationItem } from "@acme/db/schema";
+import {
+  article,
+  category,
+  feed,
+  recommendation,
+  recommendationItem,
+} from "@acme/db/schema";
 
 import type { AppEnv } from "../env";
 
@@ -22,6 +28,12 @@ interface RecommendationItemResponse {
     url: string;
     description: string | null;
     ogImageUrl: string | null;
+    isRead: boolean;
+  };
+  feed: {
+    id: string;
+    title: string;
+    categoryName: string | null;
   };
 }
 
@@ -58,10 +70,18 @@ const loadRecommendation = async (
         url: article.url,
         description: article.description,
         ogImageUrl: article.ogImageUrl,
+        isRead: article.isRead,
+      },
+      feed: {
+        id: feed.id,
+        title: feed.title,
+        categoryName: category.name,
       },
     })
     .from(recommendationItem)
     .innerJoin(article, eq(recommendationItem.articleId, article.id))
+    .innerJoin(feed, eq(article.feedId, feed.id))
+    .leftJoin(category, eq(feed.categoryId, category.id))
     .where(eq(recommendationItem.recommendationId, head.id))
     .orderBy(asc(recommendationItem.rank));
   return {

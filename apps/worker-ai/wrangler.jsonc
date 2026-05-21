@@ -6,6 +6,10 @@
   "main": "src/index.ts",
   // Disable the public *.workers.dev URL — Cron Trigger is the only invoker
   "workers_dev": false,
+  // Avoid 9229 collision with worker-jobs when both run via `turbo watch dev`.
+  "dev": {
+    "inspector_port": 9230,
+  },
   "triggers": {
     "crons": ["0 * * * *"],
   },

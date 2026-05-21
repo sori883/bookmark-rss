@@ -5,6 +5,8 @@ import { useConfirm } from "~/components/Confirm";
 import { useToast } from "~/components/Toast";
 import { makeApiClient } from "~/lib/api-client";
 
+const IOS_SHORTCUT_CLIENT_ID = "bookmark-ios";
+
 interface Preferences {
   recommendationEnabled: boolean;
   recommendationHour: number;
@@ -182,6 +184,201 @@ function SettingsPage() {
           {submitting ? "保存中..." : "保存"}
         </button>
       </div>
+
+      <IosShortcutSection />
     </section>
+  );
+}
+
+interface DeviceCodePayload {
+  device_code: string;
+  user_code: string;
+}
+
+interface DeviceTokenPayload {
+  access_token: string;
+}
+
+const issueIosShortcutToken = async (): Promise<string> => {
+  const codeRes = await fetch("/api/auth/device/code", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    credentials: "same-origin",
+    body: JSON.stringify({ client_id: IOS_SHORTCUT_CLIENT_ID }),
+  });
+  if (!codeRes.ok) {
+    throw new Error(`device/code failed (HTTP ${codeRes.status})`);
+  }
+  const code: DeviceCodePayload = await codeRes.json();
+
+  const approveRes = await fetch("/api/auth/device/approve", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    credentials: "same-origin",
+    body: JSON.stringify({ userCode: code.user_code }),
+  });
+  if (!approveRes.ok) {
+    throw new Error(`device/approve failed (HTTP ${approveRes.status})`);
+  }
+
+  const tokenRes = await fetch("/api/auth/device/token", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      grant_type: "urn:ietf:params:oauth:grant-type:device_code",
+      device_code: code.device_code,
+      client_id: IOS_SHORTCUT_CLIENT_ID,
+    }),
+  });
+  if (!tokenRes.ok) {
+    throw new Error(`device/token failed (HTTP ${tokenRes.status})`);
+  }
+  const token: DeviceTokenPayload = await tokenRes.json();
+  return token.access_token;
+};
+
+function IosShortcutSection() {
+  const toast = useToast();
+  const [issuing, setIssuing] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
+  const [revealed, setRevealed] = useState(false);
+
+  const endpoint =
+    typeof window === "undefined"
+      ? ""
+      : `${window.location.origin}/api/main/bookmarks`;
+
+  const handleIssue = async () => {
+    setIssuing(true);
+    try {
+      const t = await issueIosShortcutToken();
+      setToken(t);
+      setRevealed(true);
+      toast.success("トークンを発行しました。 コピーしてショートカットに貼り付けてください。");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "トークン発行に失敗しました");
+    } finally {
+      setIssuing(false);
+    }
+  };
+
+  const handleCopy = async (text: string, label: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success(`${label} をコピーしました`);
+    } catch {
+      toast.error("コピーに失敗しました");
+    }
+  };
+
+  return (
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-sm)]">
+      <h2 className="mb-1 text-lg font-semibold text-[var(--text)]">
+        iOS ショートカット連携
+      </h2>
+      <p className="mb-5 text-xs text-[var(--text-muted)]">
+        iPhone の共有メニューからブックマークを追加するための長期トークンを発行します。
+        画面を離れると再表示できないので、 ショートカットに貼り付けるまで閉じないでください。
+        失くした場合は再発行できます。
+      </p>
+
+      {token ? (
+        <div className="mb-5 space-y-3">
+          <label className="block">
+            <span className="mb-1 block text-xs font-medium tracking-wider text-[var(--text-muted)] uppercase">
+              アクセストークン
+            </span>
+            <div className="flex items-center gap-2">
+              <input
+                type={revealed ? "text" : "password"}
+                value={token}
+                readOnly
+                className="w-full rounded-md border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 font-mono text-sm text-[var(--text)]"
+              />
+              <button
+                type="button"
+                onClick={() => setRevealed((v) => !v)}
+                className="rounded-md border border-[var(--border)] px-3 py-2 text-xs text-[var(--text-muted)] hover:bg-[var(--surface-2)]"
+              >
+                {revealed ? "隠す" : "表示"}
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleCopy(token, "トークン")}
+                className="rounded-md bg-[var(--accent)] px-3 py-2 text-xs font-medium text-[var(--accent-fg)] hover:bg-[var(--accent-strong)]"
+              >
+                コピー
+              </button>
+            </div>
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-xs font-medium tracking-wider text-[var(--text-muted)] uppercase">
+              エンドポイント
+            </span>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={endpoint}
+                readOnly
+                className="w-full rounded-md border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 font-mono text-sm text-[var(--text)]"
+              />
+              <button
+                type="button"
+                onClick={() => void handleCopy(endpoint, "エンドポイント")}
+                className="rounded-md border border-[var(--border)] px-3 py-2 text-xs text-[var(--text-muted)] hover:bg-[var(--surface-2)]"
+              >
+                コピー
+              </button>
+            </div>
+          </label>
+          <button
+            type="button"
+            onClick={() => void handleIssue()}
+            disabled={issuing}
+            className="rounded-md border border-[var(--border)] px-3 py-1.5 text-xs font-medium text-[var(--text-muted)] hover:bg-[var(--surface-2)] hover:text-[var(--text)] disabled:opacity-50"
+          >
+            {issuing ? "発行中..." : "再発行"}
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => void handleIssue()}
+          disabled={issuing}
+          className="mb-5 rounded-md bg-[var(--accent)] px-4 py-2 text-sm font-medium text-[var(--accent-fg)] hover:bg-[var(--accent-strong)] disabled:opacity-50"
+        >
+          {issuing ? "発行中..." : "ショートカット用トークンを発行"}
+        </button>
+      )}
+
+      <div className="rounded-md border border-[var(--border)] bg-[var(--surface-2)] p-4 text-sm text-[var(--text)]">
+        <h3 className="mb-2 text-sm font-semibold">ショートカットの作り方</h3>
+        <ol className="list-decimal space-y-1 pl-5 text-xs text-[var(--text-muted)]">
+          <li>iPhone で「ショートカット」 App を開き、 右上の + で新規作成。</li>
+          <li>i ボタン → 「共有シートに表示」 をオン、 受け付ける種類を「URL」 のみに絞る。</li>
+          <li>
+            アクション「URL の内容を取得」 を追加し、 URL を上の「エンドポイント」 にする。
+          </li>
+          <li>
+            同アクションを展開し、 メソッドを <code>POST</code>、 ヘッダに
+            <code> Authorization: Bearer 上のトークン</code> と
+            <code> Content-Type: application/json</code> を追加。
+          </li>
+          <li>
+            本文を「JSON」、 キー <code>url</code> の値を「ショートカットの入力 (URL)」 に設定。
+          </li>
+          <li>
+            最後に「通知を表示」 アクションを追加して任意のメッセージを設定。
+          </li>
+          <li>
+            ショートカット名を「ブックマーク追加」 等に変更して保存。 Safari で共有 → 作成したショートカットで動作確認。
+          </li>
+        </ol>
+        <p className="mt-3 text-xs text-[var(--text-muted)]">
+          トークンが漏れた場合や端末を紛失した場合は、 再発行 (新しいトークンを発行) で対応してください。
+          現状の実装では「過去のトークンだけを失効」 する UI はまだありません。
+        </p>
+      </div>
+    </div>
   );
 }

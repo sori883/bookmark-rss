@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
-import { and, desc, eq, isNull } from "drizzle-orm";
+import { and, count, desc, eq, isNull } from "drizzle-orm";
 import { z } from "zod";
 
 import { article, feed } from "@acme/db/schema";
@@ -8,6 +8,7 @@ import { article, feed } from "@acme/db/schema";
 import type { AppEnv } from "../env";
 
 const UNCATEGORIZED_PARAM = "none";
+const PAGE_SIZE = 50;
 
 const listQuerySchema = z.object({
   feedId: z.string().optional(),
@@ -18,6 +19,7 @@ const listQuerySchema = z.object({
       v === "true" ? true : v === "false" ? false : undefined,
     ),
   categoryId: z.string().optional(),
+  page: z.coerce.number().int().min(1).optional(),
 });
 
 const patchBodySchema = z.object({
@@ -35,11 +37,13 @@ export const articlesRouter = new Hono<AppEnv>()
       feedId: c.req.query("feedId"),
       unread: c.req.query("unread"),
       categoryId: c.req.query("categoryId"),
+      page: c.req.query("page"),
     });
     if (!parsed.success) {
       return c.json({ error: "Invalid query" }, 400);
     }
-    const { feedId, unread, categoryId } = parsed.data;
+    const { feedId, unread, categoryId, page = 1 } = parsed.data;
+    const offset = (page - 1) * PAGE_SIZE;
     const conditions = [eq(article.userId, user.id)];
     if (feedId) {
       conditions.push(eq(article.feedId, feedId));
@@ -77,10 +81,34 @@ export const articlesRouter = new Hono<AppEnv>()
           .innerJoin(feed, eq(article.feedId, feed.id))
           .where(and(...conditions))
           .orderBy(desc(article.publishedAt), desc(article.createdAt))
+          .limit(PAGE_SIZE)
+          .offset(offset)
       : await baseQuery
           .where(and(...conditions))
-          .orderBy(desc(article.publishedAt), desc(article.createdAt));
-    return c.json(rows);
+          .orderBy(desc(article.publishedAt), desc(article.createdAt))
+          .limit(PAGE_SIZE)
+          .offset(offset);
+
+    const totalRow = categoryId
+      ? await db
+          .select({ value: count() })
+          .from(article)
+          .innerJoin(feed, eq(article.feedId, feed.id))
+          .where(and(...conditions))
+          .get()
+      : await db
+          .select({ value: count() })
+          .from(article)
+          .where(and(...conditions))
+          .get();
+    const total = totalRow?.value ?? 0;
+
+    return c.json({
+      items: rows,
+      total,
+      page,
+      perPage: PAGE_SIZE,
+    });
   })
   .patch(
     "/:id",

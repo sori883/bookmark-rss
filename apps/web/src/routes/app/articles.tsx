@@ -11,29 +11,42 @@ import { makeApiClient } from "~/lib/api-client";
 const UNCATEGORIZED_PARAM = "none";
 
 interface ArticlesSearch {
+  // undefined (= default) も true も「未読のみ」、 明示的に false の時だけ「すべて」を表示。
   unread?: boolean;
   categoryId?: string;
+  page?: number;
 }
 
-const validateSearch = (search: Record<string, unknown>): ArticlesSearch => ({
-  unread: search.unread === true,
-  categoryId:
-    typeof search.categoryId === "string" && search.categoryId.length > 0
-      ? search.categoryId
-      : undefined,
-});
+const validateSearch = (search: Record<string, unknown>): ArticlesSearch => {
+  const rawPage = search.page;
+  const page =
+    typeof rawPage === "number" && Number.isInteger(rawPage) && rawPage >= 1
+      ? rawPage
+      : undefined;
+  return {
+    unread: search.unread === false ? false : undefined,
+    categoryId:
+      typeof search.categoryId === "string" && search.categoryId.length > 0
+        ? search.categoryId
+        : undefined,
+    page,
+  };
+};
 
 export const Route = createFileRoute("/app/articles")({
   validateSearch,
   loaderDeps: ({ search }) => ({
     unread: search.unread,
     categoryId: search.categoryId,
+    page: search.page,
   }),
   loader: async ({ deps }) => {
     const api = makeApiClient();
-    const query: { unread?: "true"; categoryId?: string } = {};
-    if (deps.unread) query.unread = "true";
+    const showAll = deps.unread === false;
+    const query: { unread?: "true"; categoryId?: string; page?: string } = {};
+    if (!showAll) query.unread = "true";
     if (deps.categoryId) query.categoryId = deps.categoryId;
+    if (deps.page && deps.page > 1) query.page = String(deps.page);
     const [articlesRes, feedsRes, categoriesRes] = await Promise.all([
       api.api.main.articles.$get({ query }),
       api.api.main.feeds.$get(),
@@ -41,20 +54,35 @@ export const Route = createFileRoute("/app/articles")({
     ]);
     if (!articlesRes.ok) {
       return {
-        articles: [],
+        articles: [] as Array<{
+          id: string;
+          feedId: string;
+          url: string;
+          title: string;
+          description: string | null;
+          ogImageUrl: string | null;
+          isRead: boolean;
+          publishedAt: string | null;
+        }>,
+        total: 0,
+        page: 1,
+        perPage: 50,
         feedsById: {} as Record<string, { title: string }>,
         categories: [] as Array<{ id: string; name: string }>,
-        error: `HTTP ${articlesRes.status}`,
+        error: `HTTP ${articlesRes.status}` as string | null,
       };
     }
-    const articles = await articlesRes.json();
+    const payload = await articlesRes.json();
     const feeds = feedsRes.ok ? await feedsRes.json() : [];
     const categories = categoriesRes.ok ? await categoriesRes.json() : [];
     const feedsById = Object.fromEntries(
       feeds.map((f) => [f.id, { title: f.title }]),
     );
     return {
-      articles,
+      articles: payload.items,
+      total: payload.total,
+      page: payload.page,
+      perPage: payload.perPage,
       feedsById,
       categories,
       error: null as string | null,
@@ -64,8 +92,12 @@ export const Route = createFileRoute("/app/articles")({
 });
 
 function ArticlesPage() {
-  const { articles, feedsById, categories, error } = Route.useLoaderData();
+  const { articles, total, page, perPage, feedsById, categories, error } =
+    Route.useLoaderData();
   const search = Route.useSearch();
+  const pageCount = Math.max(1, Math.ceil(total / perPage));
+  const hasPrev = page > 1;
+  const hasNext = page < pageCount;
   const router = useRouter();
   const navigate = useNavigate({ from: "/app/articles" });
   const toast = useToast();
@@ -83,10 +115,25 @@ function ArticlesPage() {
     await router.invalidate();
   };
 
+  const markReadOnOpen = (id: string, alreadyRead: boolean) => {
+    if (alreadyRead) return;
+    void (async () => {
+      const api = makeApiClient();
+      const res = await api.api.main.articles[":id"].$patch({
+        param: { id },
+        json: { isRead: true },
+      });
+      if (res.ok) {
+        await router.invalidate();
+      }
+    })();
+  };
+
   const onChangeCategory = (raw: string) => {
     const categoryId = raw === "" ? undefined : raw;
     void navigate({
-      search: (prev) => ({ ...prev, categoryId }),
+      // Changing the filter should reset pagination.
+      search: (prev) => ({ ...prev, categoryId, page: undefined }),
     });
   };
 
@@ -113,27 +160,33 @@ function ArticlesPage() {
             <div className="flex gap-1 rounded-md border border-[var(--border)] p-0.5 text-xs">
               <Link
                 to="/app/articles"
-                search={(prev) => ({ ...prev, unread: undefined })}
-                className="rounded px-3 py-1 text-[var(--text-muted)] no-underline"
-                activeOptions={{ exact: true, includeSearch: true }}
-                activeProps={{
-                  className:
-                    "rounded bg-[var(--accent-soft)] px-3 py-1 font-medium text-[var(--accent-strong)] no-underline",
-                }}
+                search={(prev) => ({
+                  ...prev,
+                  unread: undefined,
+                  page: undefined,
+                })}
+                className={
+                  search.unread === false
+                    ? "rounded px-3 py-1 text-[var(--text-muted)] no-underline"
+                    : "rounded bg-[var(--accent-soft)] px-3 py-1 font-medium text-[var(--accent-strong)] no-underline"
+                }
               >
-                すべて
+                未読のみ
               </Link>
               <Link
                 to="/app/articles"
-                search={(prev) => ({ ...prev, unread: true })}
-                className="rounded px-3 py-1 text-[var(--text-muted)] no-underline"
-                activeOptions={{ exact: true, includeSearch: true }}
-                activeProps={{
-                  className:
-                    "rounded bg-[var(--accent-soft)] px-3 py-1 font-medium text-[var(--accent-strong)] no-underline",
-                }}
+                search={(prev) => ({
+                  ...prev,
+                  unread: false,
+                  page: undefined,
+                })}
+                className={
+                  search.unread === false
+                    ? "rounded bg-[var(--accent-soft)] px-3 py-1 font-medium text-[var(--accent-strong)] no-underline"
+                    : "rounded px-3 py-1 text-[var(--text-muted)] no-underline"
+                }
               >
-                未読のみ
+                すべて
               </Link>
             </div>
           </div>
@@ -143,9 +196,9 @@ function ArticlesPage() {
 
         {articles.length === 0 ? (
           <p className="mt-4 text-sm text-[var(--text-muted)]">
-            {search.unread
-              ? "未読の記事はありません。"
-              : "記事はまだ取得されていません。フィードを追加するか、しばらく待ってからもう一度確認してください。"}
+            {search.unread === false
+              ? "記事はまだ取得されていません。フィードを追加するか、しばらく待ってからもう一度確認してください。"
+              : "未読の記事はありません。"}
           </p>
         ) : (
           <ul className="mt-4 divide-y divide-[var(--border)]">
@@ -156,11 +209,21 @@ function ArticlesPage() {
                   key={a.id}
                   className="flex items-start justify-between gap-3 py-3 first:pt-0 last:pb-0"
                 >
+                  {a.ogImageUrl && (
+                    <img
+                      src={a.ogImageUrl}
+                      alt=""
+                      loading="lazy"
+                      className="hidden h-16 w-24 flex-shrink-0 rounded-md border border-[var(--border)] object-cover sm:block"
+                    />
+                  )}
                   <div className="min-w-0 flex-1">
                     <a
                       href={a.url}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => markReadOnOpen(a.id, a.isRead)}
+                      onAuxClick={() => markReadOnOpen(a.id, a.isRead)}
                       className={
                         a.isRead
                           ? "block text-sm text-[var(--text-muted)] no-underline"
@@ -197,6 +260,43 @@ function ArticlesPage() {
               );
             })}
           </ul>
+        )}
+
+        {total > perPage && (
+          <nav className="mt-5 flex items-center justify-between border-t border-[var(--border)] pt-4 text-xs text-[var(--text-muted)]">
+            <span>
+              {page} / {pageCount} ページ・全 {total} 件
+            </span>
+            <div className="flex gap-2">
+              <Link
+                to="/app/articles"
+                search={(prev) => ({
+                  ...prev,
+                  page: page > 2 ? page - 1 : undefined,
+                })}
+                disabled={!hasPrev}
+                className={
+                  hasPrev
+                    ? "rounded-md border border-[var(--border)] px-3 py-1 text-[var(--text)] no-underline hover:bg-[var(--surface-2)]"
+                    : "pointer-events-none rounded-md border border-[var(--border)] px-3 py-1 text-[var(--text-muted)] opacity-50"
+                }
+              >
+                ← 前へ
+              </Link>
+              <Link
+                to="/app/articles"
+                search={(prev) => ({ ...prev, page: page + 1 })}
+                disabled={!hasNext}
+                className={
+                  hasNext
+                    ? "rounded-md border border-[var(--border)] px-3 py-1 text-[var(--text)] no-underline hover:bg-[var(--surface-2)]"
+                    : "pointer-events-none rounded-md border border-[var(--border)] px-3 py-1 text-[var(--text-muted)] opacity-50"
+                }
+              >
+                次へ →
+              </Link>
+            </div>
+          </nav>
         )}
       </section>
     </div>

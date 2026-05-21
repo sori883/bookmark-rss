@@ -11,11 +11,23 @@ export const Route = createFileRoute("/app/feeds_/$id")({
       api.api.main.articles.$get({ query: { feedId: params.id } }),
     ]);
     if (!feedRes.ok) {
-      return { feed: null, articles: [], error: `HTTP ${feedRes.status}` };
+      return {
+        feed: null,
+        articles: [] as Array<{
+          id: string;
+          url: string;
+          title: string;
+          isRead: boolean;
+          publishedAt: string | null;
+          ogImageUrl: string | null;
+        }>,
+        error: `HTTP ${feedRes.status}` as string | null,
+      };
     }
+    const articles = articlesRes.ok ? (await articlesRes.json()).items : [];
     return {
       feed: await feedRes.json(),
-      articles: articlesRes.ok ? await articlesRes.json() : [],
+      articles,
       error: null as string | null,
     };
   },

@@ -60,6 +60,13 @@ beforeEach(async () => {
   ]);
 });
 
+interface ArticleListResponse {
+  items: { id: string }[];
+  total: number;
+  page: number;
+  perPage: number;
+}
+
 describe("GET /articles", () => {
   it("returns 401 when unauthenticated", async () => {
     const app = buildTestApp({ db, user: null });
@@ -71,22 +78,27 @@ describe("GET /articles", () => {
     const app = buildTestApp({ db, user });
     const res = await app.request("/articles");
     expect(res.status).toBe(200);
-    const body = (await res.json()) as { id: string }[];
-    expect(body.map((a) => a.id)).toEqual(["b1", "a2", "a1"]);
+    const body = (await res.json()) as ArticleListResponse;
+    expect(body.items.map((a) => a.id)).toEqual(["b1", "a2", "a1"]);
+    expect(body.total).toBe(3);
+    expect(body.page).toBe(1);
+    expect(body.perPage).toBe(50);
   });
 
   it("filters by feedId", async () => {
     const app = buildTestApp({ db, user });
     const res = await app.request("/articles?feedId=feed-a");
-    const body = (await res.json()) as { id: string }[];
-    expect(body.map((a) => a.id)).toEqual(["a2", "a1"]);
+    const body = (await res.json()) as ArticleListResponse;
+    expect(body.items.map((a) => a.id)).toEqual(["a2", "a1"]);
+    expect(body.total).toBe(2);
   });
 
   it("filters unread only", async () => {
     const app = buildTestApp({ db, user });
     const res = await app.request("/articles?unread=true");
-    const body = (await res.json()) as { id: string }[];
-    expect(body.map((a) => a.id)).toEqual(["b1", "a1"]);
+    const body = (await res.json()) as ArticleListResponse;
+    expect(body.items.map((a) => a.id)).toEqual(["b1", "a1"]);
+    expect(body.total).toBe(2);
   });
 
   it("does not leak other users' articles", async () => {
@@ -106,8 +118,37 @@ describe("GET /articles", () => {
     });
     const app = buildTestApp({ db, user });
     const res = await app.request("/articles");
-    const body = (await res.json()) as { id: string }[];
-    expect(body.map((a) => a.id)).not.toContain("c1");
+    const body = (await res.json()) as ArticleListResponse;
+    expect(body.items.map((a) => a.id)).not.toContain("c1");
+  });
+
+  it("paginates with page=2 and exposes total across pages", async () => {
+    // Seed enough rows so we can request page=2. The 3 articles from
+    // beforeEach are already in feed-a / feed-b; add 60 more on feed-a.
+    const extras = Array.from({ length: 60 }, (_, i) => ({
+      id: `extra-${String(i).padStart(2, "0")}`,
+      userId: user.id,
+      feedId: "feed-a",
+      url: `https://a.example.com/x/${i}`,
+      title: `Extra ${i}`,
+      isRead: false,
+      publishedAt: new Date(`2025-01-${String((i % 28) + 1).padStart(2, "0")}T00:00:00Z`),
+    }));
+    await db.insert(article).values(extras);
+
+    const app = buildTestApp({ db, user });
+    const page1 = (await (await app.request("/articles?page=1")).json()) as ArticleListResponse;
+    const page2 = (await (await app.request("/articles?page=2")).json()) as ArticleListResponse;
+    expect(page1.items).toHaveLength(50);
+    expect(page2.items.length).toBeGreaterThan(0);
+    expect(page2.items.length).toBeLessThanOrEqual(50);
+    expect(page1.total).toBe(page2.total);
+    expect(page1.total).toBe(63);
+    // No overlap between page 1 and page 2.
+    const intersect = page1.items
+      .map((a) => a.id)
+      .filter((id) => page2.items.some((b) => b.id === id));
+    expect(intersect).toEqual([]);
   });
 });
 
@@ -128,32 +169,34 @@ describe("GET /articles?categoryId=", () => {
     const app = buildTestApp({ db, user });
     const res = await app.request("/articles?categoryId=cat-1");
     expect(res.status).toBe(200);
-    const body = (await res.json()) as { id: string }[];
-    expect(body.map((a) => a.id).sort()).toEqual(["a1", "a2"]);
+    const body = (await res.json()) as ArticleListResponse;
+    expect(body.items.map((a) => a.id).sort()).toEqual(["a1", "a2"]);
+    expect(body.total).toBe(2);
   });
 
   it("returns only articles from uncategorized feeds when categoryId=none", async () => {
     const app = buildTestApp({ db, user });
     const res = await app.request("/articles?categoryId=none");
-    const body = (await res.json()) as { id: string }[];
-    expect(body.map((a) => a.id)).toEqual(["b1"]);
+    const body = (await res.json()) as ArticleListResponse;
+    expect(body.items.map((a) => a.id)).toEqual(["b1"]);
   });
 
   it("combines categoryId with unread filter", async () => {
     const app = buildTestApp({ db, user });
     const res = await app.request("/articles?categoryId=cat-1&unread=true");
-    const body = (await res.json()) as { id: string }[];
-    expect(body.map((a) => a.id)).toEqual(["a1"]);
+    const body = (await res.json()) as ArticleListResponse;
+    expect(body.items.map((a) => a.id)).toEqual(["a1"]);
   });
 
-  it("returns empty when no feeds match the category", async () => {
+  it("returns empty items when no feeds match the category", async () => {
     await db
       .insert(category)
       .values({ id: "cat-empty", userId: user.id, name: "Empty" });
     const app = buildTestApp({ db, user });
     const res = await app.request("/articles?categoryId=cat-empty");
-    const body = (await res.json()) as { id: string }[];
-    expect(body).toEqual([]);
+    const body = (await res.json()) as ArticleListResponse;
+    expect(body.items).toEqual([]);
+    expect(body.total).toBe(0);
   });
 });
 

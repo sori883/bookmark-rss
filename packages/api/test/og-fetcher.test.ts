@@ -142,4 +142,15 @@ describe("defaultOgFetcher", () => {
       fetcher.fetch("https://example.com/missing"),
     ).rejects.toThrow();
   });
+
+  it("sends a browser-style User-Agent so CDN-protected pages succeed", async () => {
+    let captured: Headers | undefined;
+    const fetchImpl: typeof fetch = (_input, init) => {
+      captured = new Headers(init?.headers);
+      return Promise.resolve(new Response("<html></html>", { status: 200 }));
+    };
+    const fetcher = createDefaultOgFetcher({ fetchImpl });
+    await fetcher.fetch("https://example.com");
+    expect(captured?.get("user-agent")).toMatch(/^Mozilla\//);
+  });
 });

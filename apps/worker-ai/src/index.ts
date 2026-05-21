@@ -18,9 +18,14 @@ interface Env {
   CF_AI_GATEWAY_TOKEN?: string;
 }
 
-const PicksSchema = z.object({
-  picks: z.array(z.object({ id: z.string(), reason: z.string() })),
-});
+const PickItemSchema = z.object({ id: z.string(), reason: z.string() });
+
+// Gemini may answer with either `[{id, reason}, ...]` or `{ picks: [...] }`
+// depending on how it interprets the prompt. Accept both shapes.
+const PicksSchema = z.union([
+  z.object({ picks: z.array(PickItemSchema) }),
+  z.array(PickItemSchema).transform((picks) => ({ picks })),
+]);
 
 interface GeminiResponse {
   candidates?: {
@@ -89,6 +94,17 @@ const runRecommend = async (env: Env): Promise<void> => {
 };
 
 export default {
+  fetch(request, env, ctx) {
+    const url = new URL(request.url);
+    if (request.method === "POST" && url.pathname === "/trigger") {
+      ctx.waitUntil(runRecommend(env));
+      return new Response(JSON.stringify({ status: "triggered" }), {
+        status: 202,
+        headers: { "content-type": "application/json" },
+      });
+    }
+    return new Response("Not Found", { status: 404 });
+  },
   scheduled(_event, env, ctx) {
     ctx.waitUntil(runRecommend(env));
   },

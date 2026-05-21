@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "pnpm with-env vite dev --port 3000",
+    "dev:lan": "pnpm with-env vite dev --port 3000 --host",
     "build": "pnpm with-env vite build",
     "preview": "pnpm with-env vite preview",
     "test": "vitest run",
@@ -31,6 +32,7 @@
     "@tanstack/react-router-ssr-query": "latest",
     "@tanstack/react-start": "latest",
     "@tanstack/router-plugin": "^1.132.0",
+    "drizzle-orm": "catalog:",
     "lucide-react": "^1.16.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

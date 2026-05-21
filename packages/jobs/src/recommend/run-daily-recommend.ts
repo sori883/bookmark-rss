@@ -226,15 +226,17 @@ const processUser = async ({
         pref.discordWebhookUrlEncrypted,
         deps.encryptionMasterKey,
       );
+      const proxyUrl = (articleId: string) =>
+        `${deps.webBaseUrl}/r/${articleId}`;
       const aiItems = aiPicks.flatMap((p) => {
         const art = articleById.get(p.articleId);
         return art
-          ? [{ title: art.title, url: art.url, reason: p.reason }]
+          ? [{ title: art.title, url: proxyUrl(art.id), reason: p.reason }]
           : [];
       });
       const randomItems = randomPicks.map((a) => ({
         title: a.title,
-        url: a.url,
+        url: proxyUrl(a.id),
       }));
       await sendDiscord({
         webhookUrl,

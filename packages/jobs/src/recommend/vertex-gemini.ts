@@ -1,3 +1,5 @@
+import { buildRecommendationPrompt } from "./recommend-prompt";
+
 export class VertexGeminiError extends Error {
   constructor(message: string) {
     super(message);
@@ -32,34 +34,6 @@ export interface CreateVertexGeminiClientConfig {
   generate: (prompt: string) => Promise<RawPicks>;
 }
 
-const buildPrompt = ({
-  bookmarks,
-  candidates,
-  count,
-}: GenerateRecommendationsParams): string => {
-  const bookmarkLines = bookmarks
-    .map((b) => `- ${b.title}${b.description ? ` — ${b.description}` : ""}`)
-    .join("\n");
-  const candidateLines = candidates
-    .map(
-      (c) =>
-        `- id=${c.id} | ${c.title}${c.description ? ` — ${c.description}` : ""}`,
-    )
-    .join("\n");
-  return [
-    "あなたは記事キュレーターです。",
-    `ユーザーがブックマークした記事から興味関心を読み取り、未読の候補記事から特に気に入りそうな記事を ${count} 件選んでください。`,
-    "",
-    "[ユーザーのブックマーク (興味関心の参考)]",
-    bookmarkLines || "(ブックマークなし)",
-    "",
-    "[未読候補記事]",
-    candidateLines,
-    "",
-    "picks 配列で id (上記候補の id) と reason (日本語1〜2文) を返してください。",
-  ].join("\n");
-};
-
 export const createVertexGeminiClient = (
   config: CreateVertexGeminiClientConfig,
 ) => ({
@@ -68,7 +42,7 @@ export const createVertexGeminiClient = (
   ): Promise<RecommendationPick[]> {
     let result: RawPicks;
     try {
-      result = await config.generate(buildPrompt(params));
+      result = await config.generate(buildRecommendationPrompt(params));
     } catch (err) {
       throw new VertexGeminiError(
         `Vertex AI generate failed: ${err instanceof Error ? err.message : String(err)}`,

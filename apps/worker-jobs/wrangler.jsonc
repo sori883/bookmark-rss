@@ -7,6 +7,6 @@
   // Disable the public *.workers.dev URL — Cron Trigger is the only invoker
   "workers_dev": false,
   "triggers": {
-    "crons": ["0 * * * *"],
+    "crons": ["30 * * * *"],
   },
 }

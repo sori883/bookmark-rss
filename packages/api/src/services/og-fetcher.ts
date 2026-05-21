@@ -4,6 +4,11 @@ export interface DefaultOgFetcherOptions {
   fetchImpl?: typeof fetch;
 }
 
+// Some CDNs (e.g. CloudFront in front of connpass) reject requests without a
+// browser-style User-Agent. Mirror current Safari to maximize compatibility.
+const BROWSER_UA =
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15";
+
 const HTML_ENTITIES: Record<string, string> = {
   "&amp;": "&",
   "&lt;": "<",
@@ -54,7 +59,10 @@ export const createDefaultOgFetcher = (
   return {
     async fetch(url: string): Promise<OgMetadata> {
       const res = await fetchImpl(url, {
-        headers: { accept: "text/html,application/xhtml+xml,*/*" },
+        headers: {
+          accept: "text/html,application/xhtml+xml,*/*",
+          "user-agent": BROWSER_UA,
+        },
       });
       if (!res.ok) {
         throw new Error(`Failed to fetch page: ${res.status}`);

@@ -3,22 +3,39 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { authClient } from "~/auth/client";
 import { makeApiClient } from "~/lib/api-client";
 
+interface IndexSearch {
+  returnTo?: string;
+}
+
+const validateSearch = (search: Record<string, unknown>): IndexSearch => ({
+  returnTo:
+    typeof search.returnTo === "string" && search.returnTo.startsWith("/")
+      ? search.returnTo
+      : undefined,
+});
+
+const DEFAULT_CALLBACK = "/app/feeds";
+
 export const Route = createFileRoute("/")({
-  beforeLoad: async () => {
+  validateSearch,
+  loaderDeps: ({ search }) => ({ returnTo: search.returnTo }),
+  beforeLoad: async ({ search }) => {
     const api = makeApiClient();
     const res = await api.api.main.me.$get();
     if (res.ok) {
-      throw redirect({ to: "/app/feeds" });
+      throw redirect({ to: search.returnTo ?? DEFAULT_CALLBACK });
     }
   },
   component: LoginPage,
 });
 
 function LoginPage() {
+  const { returnTo } = Route.useSearch();
+
   const handleSignIn = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/app/feeds",
+      callbackURL: returnTo ?? DEFAULT_CALLBACK,
     });
   };
 

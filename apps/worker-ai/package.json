@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm with-env vite dev --port 8789",
+    "trigger": "curl -sfS -X POST 'http://localhost:8789/trigger' -w '[trigger] HTTP %{http_code}\\n'",
     "build": "pnpm with-env vite build",
     "deploy": "pnpm run build && wrangler deploy --secrets-file ../../.env",
     "cf-typegen": "pnpm with-env wrangler types --env-interface CloudflareBindings",
