@@ -33,10 +33,10 @@ export {
 export { buildAndQuery, tokenize } from "./text-tokenizer";
 export { CryptoError, decryptSecret, encryptSecret } from "./crypto";
 export type {
+  CreateVertexGeminiClientConfig,
   GenerateRecommendationsParams,
   RecommendationPick,
   VertexGeminiClient,
-  VertexGeminiConfig,
 } from "./recommend/vertex-gemini";
 export {
   VertexGeminiError,

@@ -1,0 +1,5 @@
+{
+  "extends": "@acme/tsconfig/base.json",
+  "include": ["src", "worker-configuration.d.ts"],
+  "exclude": ["node_modules"]
+}

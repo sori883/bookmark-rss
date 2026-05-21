@@ -19,11 +19,12 @@
   "dependencies": {
     "@acme/db": "workspace:*",
     "@mozilla/readability": "^0.6.0",
+    "ai": "^6.0.188",
     "drizzle-orm": "catalog:",
     "fast-xml-parser": "^5.8.0",
-    "jose": "^6.2.3",
     "linkedom": "^0.18.12",
-    "turndown": "^7.2.4"
+    "turndown": "^7.2.4",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@acme/eslint-config": "workspace:^",
