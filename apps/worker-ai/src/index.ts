@@ -8,11 +8,15 @@ interface Env {
   DATABASE_AUTH_TOKEN: string;
   ENCRYPTION_MASTER_KEY: string;
   WEB_BASE_URL: string;
+  GCP_PROJECT_ID: string;
+  VERTEX_AI_LOCATION: string;
+  VERTEX_AI_MODEL: string;
+  CF_ACCOUNT_ID: string;
   CF_AI_GATEWAY_ID: string;
-  AI: Ai;
+  // Optional: only required when "Authenticated Gateway" is enabled
+  // on the AI Gateway. Leave empty otherwise.
+  CF_AI_GATEWAY_TOKEN?: string;
 }
-
-const MODEL = "google/gemini-3.1-flash-lite";
 
 const PicksSchema = z.object({
   picks: z.array(z.object({ id: z.string(), reason: z.string() })),
@@ -24,30 +28,48 @@ interface GeminiResponse {
   }[];
 }
 
-const buildGeminiClient = (env: Env) =>
-  createVertexGeminiClient({
+const buildAiGatewayUrl = (env: Env): string =>
+  `https://gateway.ai.cloudflare.com/v1/${env.CF_ACCOUNT_ID}/${env.CF_AI_GATEWAY_ID}/google-vertex-ai/v1/projects/${env.GCP_PROJECT_ID}/locations/${env.VERTEX_AI_LOCATION}/publishers/google/models/${env.VERTEX_AI_MODEL}:generateContent`;
+
+const buildGeminiClient = (env: Env) => {
+  const url = buildAiGatewayUrl(env);
+  return createVertexGeminiClient({
     generate: async (prompt) => {
-      const response = (await env.AI.run(
-        MODEL,
-        {
+      const headers: Record<string, string> = {
+        "content-type": "application/json",
+      };
+      if (env.CF_AI_GATEWAY_TOKEN) {
+        headers["cf-aig-authorization"] = `Bearer ${env.CF_AI_GATEWAY_TOKEN}`;
+      }
+      const res = await fetch(url, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
           contents: [{ role: "user", parts: [{ text: prompt }] }],
           generationConfig: {
             temperature: 0.4,
             responseMimeType: "application/json",
           },
-        },
-        { gateway: { id: env.CF_AI_GATEWAY_ID } },
-      )) as GeminiResponse;
-      const text = response.candidates?.[0]?.content?.parts?.[0]?.text;
+        }),
+      });
+      if (!res.ok) {
+        const detail = await res.text().catch(() => "");
+        throw new Error(
+          `AI Gateway -> Vertex AI returned HTTP ${res.status}: ${detail.slice(0, 200)}`,
+        );
+      }
+      const body: GeminiResponse = await res.json();
+      const text = body.candidates?.[0]?.content?.parts?.[0]?.text;
       if (typeof text !== "string") {
         throw new Error(
-          "Workers AI response missing candidates[].content.parts[].text",
+          "Vertex AI response missing candidates[].content.parts[].text",
         );
       }
       const parsed: unknown = JSON.parse(text);
       return PicksSchema.parse(parsed);
     },
   });
+};
 
 const runRecommend = async (env: Env): Promise<void> => {
   const db = createDbClient({
