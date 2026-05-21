@@ -41,6 +41,7 @@ yarn-error.log*
 # local env files
 .env
 .env*.local
+.env.prod
 
 # personal Claude Code / Serena settings (per-user, not for the team)
 .claude/settings.local.json

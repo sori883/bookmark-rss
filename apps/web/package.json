@@ -12,13 +12,14 @@
     "build": "pnpm with-env vite build",
     "preview": "pnpm with-env vite preview",
     "test": "vitest run",
-    "cf-deploy": "pnpm run build && wrangler deploy --secrets-file ../../.env",
+    "cf-deploy:prod": "pnpm with-env-prod vite build && pnpm with-env-prod wrangler deploy --secrets-file ../../.env.prod",
     "cf-typegen": "pnpm with-env wrangler types --env-interface CloudflareBindings",
     "clean": "git clean -xdf .cache .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore --ignore-path .prettierignore",
     "lint": "eslint --flag unstable_native_nodejs_ts_config",
     "typecheck": "tsc --noEmit",
-    "with-env": "CLOUDFLARE_INCLUDE_PROCESS_ENV=true dotenv -e ../../.env --"
+    "with-env": "CLOUDFLARE_INCLUDE_PROCESS_ENV=true dotenv -e ../../.env --",
+    "with-env-prod": "CLOUDFLARE_INCLUDE_PROCESS_ENV=true dotenv -e ../../.env.prod --"
   },
   "dependencies": {
     "@acme/api": "workspace:*",

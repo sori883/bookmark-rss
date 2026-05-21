@@ -7,13 +7,14 @@
     "dev": "pnpm with-env vite dev --port 8788",
     "trigger": "curl -sfS -X POST 'http://localhost:8788/trigger' -w '[trigger] HTTP %{http_code}\\n'",
     "build": "pnpm with-env vite build",
-    "deploy": "pnpm run build && wrangler deploy --secrets-file ../../.env",
+    "deploy:prod": "pnpm with-env-prod vite build && pnpm with-env-prod wrangler deploy --secrets-file ../../.env.prod",
     "cf-typegen": "pnpm with-env wrangler types --env-interface CloudflareBindings",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint --flag unstable_native_nodejs_ts_config",
     "typecheck": "tsc --noEmit",
-    "with-env": "CLOUDFLARE_INCLUDE_PROCESS_ENV=true dotenv -e ../../.env --"
+    "with-env": "CLOUDFLARE_INCLUDE_PROCESS_ENV=true dotenv -e ../../.env --",
+    "with-env-prod": "CLOUDFLARE_INCLUDE_PROCESS_ENV=true dotenv -e ../../.env.prod --"
   },
   "dependencies": {
     "@acme/db": "workspace:*",
