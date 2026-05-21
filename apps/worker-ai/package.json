@@ -17,10 +17,7 @@
   "dependencies": {
     "@acme/db": "workspace:*",
     "@acme/jobs": "workspace:*",
-    "@ai-sdk/google-vertex": "^4.0.134",
-    "ai": "^6.0.188",
     "drizzle-orm": "catalog:",
-    "hono": "^4.12.18",
     "zod": "catalog:"
   },
   "devDependencies": {
