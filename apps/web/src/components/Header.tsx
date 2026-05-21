@@ -1,10 +1,16 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 import ThemeToggle from "./ThemeToggle";
 import { authClient } from "~/auth/client";
 
 export default function Header() {
+  const navigate = useNavigate();
   const { data: session, isPending } = authClient.useSession();
+
+  const handleSignOut = async () => {
+    await authClient.signOut();
+    await navigate({ to: "/" });
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--surface)]/95 backdrop-blur">
@@ -24,7 +30,7 @@ export default function Header() {
               </span>
               <button
                 type="button"
-                onClick={() => authClient.signOut()}
+                onClick={() => void handleSignOut()}
                 className="rounded-md px-3 py-1.5 text-xs font-medium text-[var(--text-muted)] hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
               >
                 サインアウト
