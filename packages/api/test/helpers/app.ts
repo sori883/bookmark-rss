@@ -19,6 +19,7 @@ import { injectEncryptionKey } from "../../src/middleware/inject-encryption-key"
 import { injectFeedFetcher } from "../../src/middleware/inject-feed-fetcher";
 import { injectJobsDispatcher } from "../../src/middleware/inject-jobs-dispatcher";
 import { injectOgFetcher } from "../../src/middleware/inject-og-fetcher";
+import { accountRouter } from "../../src/routes/account";
 import { articlesRouter } from "../../src/routes/articles";
 import { bookmarksRouter } from "../../src/routes/bookmarks";
 import { categoriesRouter } from "../../src/routes/categories";
@@ -129,5 +130,6 @@ export const buildTestApp = ({
     .route("/categories", categoriesRouter)
     .route("/tags", tagsRouter)
     .route("/preferences", preferencesRouter)
-    .route("/recommendations", recommendationsRouter);
+    .route("/recommendations", recommendationsRouter)
+    .route("/account", accountRouter);
 };

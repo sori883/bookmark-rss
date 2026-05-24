@@ -13,6 +13,7 @@ import { injectJobsDispatcher } from "./middleware/inject-jobs-dispatcher";
 import { injectOgFetcher } from "./middleware/inject-og-fetcher";
 import { loadSession } from "./middleware/load-session";
 import { requireAuth } from "./middleware/require-auth";
+import { accountRouter } from "./routes/account";
 import { articlesRouter } from "./routes/articles";
 import { bookmarksRouter } from "./routes/bookmarks";
 import { categoriesRouter } from "./routes/categories";
@@ -46,7 +47,8 @@ export const createApp = (deps: {
     .route("/categories", categoriesRouter)
     .route("/tags", tagsRouter)
     .route("/preferences", preferencesRouter)
-    .route("/recommendations", recommendationsRouter);
+    .route("/recommendations", recommendationsRouter)
+    .route("/account", accountRouter);
 
 export type AppType = ReturnType<typeof createApp>;
 export type {
