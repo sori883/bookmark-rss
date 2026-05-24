@@ -13,6 +13,19 @@ export interface DefaultBookmarkContentFetcherOptions {
   fetchImpl?: typeof fetch;
 }
 
+const PDF_PLACEHOLDER_MARKDOWN =
+  "_PDF のためプレビューできません。元の URL を参照してください。_";
+
+const isPdfResponse = (url: string, contentType: string | null): boolean => {
+  if (contentType?.toLowerCase().includes("application/pdf")) return true;
+  try {
+    const pathname = new URL(url).pathname.toLowerCase();
+    return pathname.endsWith(".pdf");
+  } catch {
+    return false;
+  }
+};
+
 export const createDefaultBookmarkContentFetcher = (
   options: DefaultBookmarkContentFetcherOptions = {},
 ): BookmarkContentFetcher => {
@@ -24,6 +37,9 @@ export const createDefaultBookmarkContentFetcher = (
       });
       if (!res.ok) {
         throw new Error(`Failed to fetch page: ${res.status}`);
+      }
+      if (isPdfResponse(url, res.headers.get("content-type"))) {
+        return { title: null, markdown: PDF_PLACEHOLDER_MARKDOWN };
       }
       const html = await res.text();
       const result = extractMarkdownFromHtml(html, url);

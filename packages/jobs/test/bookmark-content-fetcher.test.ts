@@ -45,4 +45,26 @@ describe("defaultBookmarkContentFetcher", () => {
     });
     await expect(fetcher.fetch("https://example.com")).rejects.toThrow();
   });
+
+  it("returns a placeholder for PDF content instead of throwing", async () => {
+    const fetcher = createDefaultBookmarkContentFetcher({
+      fetchImpl: makeFetchOk("%PDF-1.4 binary garbage", "application/pdf"),
+    });
+    const result = await fetcher.fetch("https://example.com/sample.pdf");
+    expect(result.title).toBeNull();
+    expect(result.markdown).toMatch(/PDF/);
+  });
+
+  it("detects PDF by URL extension when content-type is generic", async () => {
+    const fetcher = createDefaultBookmarkContentFetcher({
+      fetchImpl: makeFetchOk(
+        "%PDF-1.4 binary garbage",
+        "application/octet-stream",
+      ),
+    });
+    const result = await fetcher.fetch(
+      "https://example.com/path/to/file.pdf",
+    );
+    expect(result.markdown).toMatch(/PDF/);
+  });
 });
