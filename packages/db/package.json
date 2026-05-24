@@ -24,11 +24,14 @@
     "lint": "eslint --flag unstable_native_nodejs_ts_config",
     "generate": "pnpm with-env drizzle-kit generate",
     "migrate": "pnpm with-env drizzle-kit migrate",
+    "migrate:prod": "pnpm with-env-prod drizzle-kit migrate",
     "push": "pnpm with-env drizzle-kit push",
     "apply-extras": "pnpm with-env node scripts/apply-extras.mjs",
+    "apply-extras:prod": "pnpm with-env-prod node scripts/apply-extras.mjs",
     "studio": "pnpm with-env drizzle-kit studio",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
-    "with-env": "dotenv -e ../../.env --"
+    "with-env": "dotenv -e ../../.env --",
+    "with-env-prod": "dotenv -e ../../.env.prod --"
   },
   "dependencies": {
     "@libsql/client": "catalog:",

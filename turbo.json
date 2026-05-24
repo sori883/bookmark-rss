@@ -39,6 +39,9 @@
       "cache": false,
       "interactive": true
     },
+    "generate": {
+      "cache": false
+    },
     "migrate": {
       "cache": false
     },

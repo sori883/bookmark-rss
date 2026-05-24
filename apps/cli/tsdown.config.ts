@@ -17,7 +17,10 @@ export default defineConfig({
   target: "node22",
   shims: true,
   clean: true,
-  noExternal: ["citty", "@clack/prompts", "picocolors"],
+  // Bundle every dependency. The CLI ships as a single file with no
+  // node_modules at the install site, so anything external would fail at
+  // runtime (hono/client, citty, @acme/*, etc.).
+  noExternal: [/.*/],
   define: {
     "process.env.BOOKMARK_API_URL": JSON.stringify(baseUrl),
   },
