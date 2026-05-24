@@ -62,9 +62,7 @@ describe("defaultBookmarkContentFetcher", () => {
         "application/octet-stream",
       ),
     });
-    const result = await fetcher.fetch(
-      "https://example.com/path/to/file.pdf",
-    );
+    const result = await fetcher.fetch("https://example.com/path/to/file.pdf");
     expect(result.markdown).toMatch(/PDF/);
   });
 });

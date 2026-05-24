@@ -5,9 +5,9 @@ import {
   useRouter,
 } from "@tanstack/react-router";
 
+import { authClient } from "~/auth/client";
 import { useConfirm } from "~/components/Confirm";
 import { useToast } from "~/components/Toast";
-import { authClient } from "~/auth/client";
 import { makeApiClient } from "~/lib/api-client";
 
 const IOS_SHORTCUT_CLIENT_ID = "bookmark-ios";
@@ -277,8 +277,9 @@ function AccountSection() {
           退会
         </h3>
         <p className="mb-3 text-xs text-[var(--text-muted)]">
-          アカウントと紐づく全てのデータ (フィード・記事・ブックマーク・タグ・通知設定・おすすめ履歴) を完全に削除します。
-          この操作は取り消せません。
+          アカウントと紐づく全てのデータ
+          (フィード・記事・ブックマーク・タグ・通知設定・おすすめ履歴)
+          を完全に削除します。 この操作は取り消せません。
         </p>
         <button
           type="button"
@@ -341,8 +342,8 @@ function DeleteAccountModal({
         </h3>
         <p className="mb-4 text-xs text-[var(--text-muted)]">
           アカウントと全データが完全に削除されます。 この操作は取り消せません。
-          続行するには、 ご自身のユーザー名
-          (<code className="break-all text-[var(--text)]">{userName}</code>)
+          続行するには、 ご自身のユーザー名 (
+          <code className="break-all text-[var(--text)]">{userName}</code>)
           を下に入力してください。
         </p>
         <input
@@ -445,9 +446,13 @@ function IosShortcutSection() {
       const t = await issueIosShortcutToken();
       setToken(t);
       setRevealed(true);
-      toast.success("トークンを発行しました。 コピーしてショートカットに貼り付けてください。");
+      toast.success(
+        "トークンを発行しました。 コピーしてショートカットに貼り付けてください。",
+      );
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "トークン発行に失敗しました");
+      toast.error(
+        err instanceof Error ? err.message : "トークン発行に失敗しました",
+      );
     } finally {
       setIssuing(false);
     }
@@ -468,8 +473,10 @@ function IosShortcutSection() {
         iOS ショートカット連携
       </h2>
       <p className="mb-5 text-xs text-[var(--text-muted)]">
-        iPhone の共有メニューからブックマークを追加するための長期トークンを発行します。
-        画面を離れると再表示できないので、 ショートカットに貼り付けるまで閉じないでください。
+        iPhone
+        の共有メニューからブックマークを追加するための長期トークンを発行します。
+        画面を離れると再表示できないので、
+        ショートカットに貼り付けるまで閉じないでください。
         失くした場合は再発行できます。
       </p>
 
@@ -545,10 +552,16 @@ function IosShortcutSection() {
       <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-4 text-sm text-[var(--text)]">
         <h3 className="mb-2 text-sm font-semibold">ショートカットの作り方</h3>
         <ol className="list-decimal space-y-1 pl-5 text-xs text-[var(--text-muted)]">
-          <li>iPhone で「ショートカット」 App を開き、 右上の + で新規作成。</li>
-          <li>i ボタン → 「共有シートに表示」 をオン、 受け付ける種類を「URL」 のみに絞る。</li>
           <li>
-            アクション「URL の内容を取得」 を追加し、 URL を上の「エンドポイント」 にする。
+            iPhone で「ショートカット」 App を開き、 右上の + で新規作成。
+          </li>
+          <li>
+            i ボタン → 「共有シートに表示」 をオン、 受け付ける種類を「URL」
+            のみに絞る。
+          </li>
+          <li>
+            アクション「URL の内容を取得」 を追加し、 URL
+            を上の「エンドポイント」 にする。
           </li>
           <li>
             同アクションを展開し、 メソッドを <code>POST</code>、 ヘッダに
@@ -556,17 +569,20 @@ function IosShortcutSection() {
             <code> Content-Type: application/json</code> を追加。
           </li>
           <li>
-            本文を「JSON」、 キー <code>url</code> の値を「ショートカットの入力 (URL)」 に設定。
+            本文を「JSON」、 キー <code>url</code> の値を「ショートカットの入力
+            (URL)」 に設定。
           </li>
           <li>
             最後に「通知を表示」 アクションを追加して任意のメッセージを設定。
           </li>
           <li>
-            ショートカット名を「ブックマーク追加」 等に変更して保存。 Safari で共有 → 作成したショートカットで動作確認。
+            ショートカット名を「ブックマーク追加」 等に変更して保存。 Safari
+            で共有 → 作成したショートカットで動作確認。
           </li>
         </ol>
         <p className="mt-3 text-xs text-[var(--text-muted)]">
-          トークンが漏れた場合や端末を紛失した場合は、 再発行 (新しいトークンを発行) で対応してください。
+          トークンが漏れた場合や端末を紛失した場合は、 再発行
+          (新しいトークンを発行) で対応してください。
           現状の実装では「過去のトークンだけを失効」 する UI はまだありません。
         </p>
       </div>

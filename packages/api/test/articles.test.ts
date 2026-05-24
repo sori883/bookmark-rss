@@ -132,13 +132,19 @@ describe("GET /articles", () => {
       url: `https://a.example.com/x/${i}`,
       title: `Extra ${i}`,
       isRead: false,
-      publishedAt: new Date(`2025-01-${String((i % 28) + 1).padStart(2, "0")}T00:00:00Z`),
+      publishedAt: new Date(
+        `2025-01-${String((i % 28) + 1).padStart(2, "0")}T00:00:00Z`,
+      ),
     }));
     await db.insert(article).values(extras);
 
     const app = buildTestApp({ db, user });
-    const page1 = (await (await app.request("/articles?page=1")).json()) as ArticleListResponse;
-    const page2 = (await (await app.request("/articles?page=2")).json()) as ArticleListResponse;
+    const page1 = (await (
+      await app.request("/articles?page=1")
+    ).json()) as ArticleListResponse;
+    const page2 = (await (
+      await app.request("/articles?page=2")
+    ).json()) as ArticleListResponse;
     expect(page1.items).toHaveLength(50);
     expect(page2.items.length).toBeGreaterThan(0);
     expect(page2.items.length).toBeLessThanOrEqual(50);

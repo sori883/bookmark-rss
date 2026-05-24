@@ -133,7 +133,7 @@ export default function Sidebar({
             <X className="h-4 w-4" />
           </button>
         </div>
-        <div className="flex flex-1 flex-col gap-1 overflow-y-auto p-3 [scrollbar-gutter:stable]">
+        <div className="flex flex-1 [scrollbar-gutter:stable] flex-col gap-1 overflow-y-auto p-3">
           <nav className="flex flex-col gap-1">
             {PRIMARY_NAV.map((item) => (
               <SidebarLink
@@ -174,7 +174,10 @@ export default function Sidebar({
                       className="flex items-center gap-1 rounded-md px-2 py-1 text-left text-[10px] font-medium tracking-wider text-[var(--text-muted)] uppercase hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
                     >
                       {isCollapsed ? (
-                        <ChevronRight className="h-3 w-3 shrink-0" aria-hidden />
+                        <ChevronRight
+                          className="h-3 w-3 shrink-0"
+                          aria-hidden
+                        />
                       ) : (
                         <ChevronDown className="h-3 w-3 shrink-0" aria-hidden />
                       )}
@@ -252,8 +255,7 @@ interface FeedLinkProps {
 }
 
 function FeedLink({ id, title, onNavigate }: FeedLinkProps) {
-  const base =
-    "block truncate rounded-md px-3 py-1.5 text-xs no-underline";
+  const base = "block truncate rounded-md px-3 py-1.5 text-xs no-underline";
   return (
     <Link
       to="/app/feeds/$id"

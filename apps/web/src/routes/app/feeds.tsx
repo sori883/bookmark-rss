@@ -366,9 +366,7 @@ function FeedsPage() {
         </div>
         {(formError != null || importMessage != null) && (
           <div className="mt-2 space-y-1 text-sm">
-            {formError && (
-              <p className="text-[var(--danger)]">{formError}</p>
-            )}
+            {formError && <p className="text-[var(--danger)]">{formError}</p>}
             {importMessage && (
               <p
                 className={

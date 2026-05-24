@@ -32,8 +32,7 @@ const bulkMarkReadBodySchema = z
     articleIds: z.array(z.string()).optional(),
   })
   .refine(
-    (v) =>
-      (v.feedIds?.length ?? 0) > 0 || (v.articleIds?.length ?? 0) > 0,
+    (v) => (v.feedIds?.length ?? 0) > 0 || (v.articleIds?.length ?? 0) > 0,
     { message: "feedIds か articleIds のどちらかを指定してください" },
   );
 

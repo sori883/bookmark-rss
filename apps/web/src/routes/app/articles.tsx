@@ -270,76 +270,74 @@ function ArticlesPage() {
                 disabled={selected.size === 0 || bulkMarking}
                 className="rounded-md border border-[var(--border)] px-3 py-1 text-xs font-medium text-[var(--text-muted)] enabled:hover:border-[var(--accent)] enabled:hover:bg-[var(--accent-soft)] enabled:hover:text-[var(--accent-strong)] disabled:opacity-50"
               >
-                {bulkMarking
-                  ? "既読化中..."
-                  : `選択を既読 (${selected.size})`}
+                {bulkMarking ? "既読化中..." : `選択を既読 (${selected.size})`}
               </button>
             </div>
             <ul className="divide-y divide-[var(--border)]">
-            {articles.map((a) => {
-              const feedTitle = feedsById[a.feedId]?.title;
-              return (
-                <li
-                  key={a.id}
-                  className="flex items-start justify-between gap-3 py-3 last:pb-0"
-                >
-                  <input
-                    type="checkbox"
-                    checked={selected.has(a.id)}
-                    onChange={() => toggleOne(a.id)}
-                    className="mt-1 h-4 w-4 shrink-0 rounded border-[var(--border)] accent-[var(--accent)]"
-                    aria-label={`${a.title} を選択`}
-                  />
-                  {a.ogImageUrl && (
-                    <img
-                      src={a.ogImageUrl}
-                      alt=""
-                      loading="lazy"
-                      className="hidden h-16 w-24 flex-shrink-0 rounded-md border border-[var(--border)] object-cover sm:block"
-                    />
-                  )}
-                  <div className="min-w-0 flex-1">
-                    <a
-                      href={a.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => markReadOnOpen(a.id, a.isRead)}
-                      onAuxClick={() => markReadOnOpen(a.id, a.isRead)}
-                      className={
-                        a.isRead
-                          ? "block text-sm text-[var(--text-muted)] no-underline"
-                          : "block text-sm font-medium text-[var(--text)] no-underline"
-                      }
-                    >
-                      {a.title}
-                    </a>
-                    <div className="mt-1 flex flex-wrap items-center gap-x-2 text-xs text-[var(--text-muted)]">
-                      {feedTitle && (
-                        <Link
-                          to="/app/feeds/$id"
-                          params={{ id: a.feedId }}
-                          className="rounded bg-[var(--surface-2)] px-2 py-0.5 text-[var(--text-muted)] no-underline hover:text-[var(--text)]"
-                        >
-                          {feedTitle}
-                        </Link>
-                      )}
-                      {a.publishedAt && (
-                        <span>
-                          {new Date(a.publishedAt).toLocaleString("ja-JP")}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => toggleRead(a.id, !a.isRead)}
-                    className="shrink-0 rounded-md border border-[var(--border)] px-3 py-1 text-xs text-[var(--text-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent-strong)]"
+              {articles.map((a) => {
+                const feedTitle = feedsById[a.feedId]?.title;
+                return (
+                  <li
+                    key={a.id}
+                    className="flex items-start justify-between gap-3 py-3 last:pb-0"
                   >
-                    {a.isRead ? "未読に戻す" : "既読にする"}
-                  </button>
-                </li>
-              );
-            })}
+                    <input
+                      type="checkbox"
+                      checked={selected.has(a.id)}
+                      onChange={() => toggleOne(a.id)}
+                      className="mt-1 h-4 w-4 shrink-0 rounded border-[var(--border)] accent-[var(--accent)]"
+                      aria-label={`${a.title} を選択`}
+                    />
+                    {a.ogImageUrl && (
+                      <img
+                        src={a.ogImageUrl}
+                        alt=""
+                        loading="lazy"
+                        className="hidden h-16 w-24 flex-shrink-0 rounded-md border border-[var(--border)] object-cover sm:block"
+                      />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <a
+                        href={a.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => markReadOnOpen(a.id, a.isRead)}
+                        onAuxClick={() => markReadOnOpen(a.id, a.isRead)}
+                        className={
+                          a.isRead
+                            ? "block text-sm text-[var(--text-muted)] no-underline"
+                            : "block text-sm font-medium text-[var(--text)] no-underline"
+                        }
+                      >
+                        {a.title}
+                      </a>
+                      <div className="mt-1 flex flex-wrap items-center gap-x-2 text-xs text-[var(--text-muted)]">
+                        {feedTitle && (
+                          <Link
+                            to="/app/feeds/$id"
+                            params={{ id: a.feedId }}
+                            className="rounded bg-[var(--surface-2)] px-2 py-0.5 text-[var(--text-muted)] no-underline hover:text-[var(--text)]"
+                          >
+                            {feedTitle}
+                          </Link>
+                        )}
+                        {a.publishedAt && (
+                          <span>
+                            {new Date(a.publishedAt).toLocaleString("ja-JP")}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => toggleRead(a.id, !a.isRead)}
+                      className="shrink-0 rounded-md border border-[var(--border)] px-3 py-1 text-xs text-[var(--text-muted)] hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent-strong)]"
+                    >
+                      {a.isRead ? "未読に戻す" : "既読にする"}
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           </>
         )}

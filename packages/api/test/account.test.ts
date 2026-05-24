@@ -114,10 +114,7 @@ describe("DELETE /account", () => {
       db.select().from(article).where(eq(article.userId, userA.id)),
       db.select().from(tag).where(eq(tag.userId, userA.id)),
       db.select().from(bookmark).where(eq(bookmark.userId, userA.id)),
-      db
-        .select()
-        .from(bookmarkTag)
-        .where(eq(bookmarkTag.bookmarkId, "bm-1")),
+      db.select().from(bookmarkTag).where(eq(bookmarkTag.bookmarkId, "bm-1")),
       db
         .select()
         .from(userPreference)
