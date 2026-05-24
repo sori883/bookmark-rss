@@ -267,3 +267,140 @@ describe("PATCH /articles/:id", () => {
     expect(res.status).toBe(404);
   });
 });
+
+describe("POST /articles/bulk-mark-read", () => {
+  it("returns 401 when unauthenticated", async () => {
+    const app = buildTestApp({ db, user: null });
+    const res = await app.request("/articles/bulk-mark-read", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ feedIds: ["feed-a"] }),
+    });
+    expect(res.status).toBe(401);
+  });
+
+  it("marks all unread articles of the selected feeds as read", async () => {
+    const app = buildTestApp({ db, user });
+    const res = await app.request("/articles/bulk-mark-read", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ feedIds: ["feed-a", "feed-b"] }),
+    });
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { updated: number };
+    // a1 (unread) + b1 (unread) のみ更新、 a2 (already read) は除外
+    expect(body.updated).toBe(2);
+    const rows = await db.select().from(article);
+    expect(rows.every((r) => r.isRead === true)).toBe(true);
+  });
+
+  it("does not touch other users' articles", async () => {
+    const other = await createTestUser(db, { email: "x@example.com" });
+    await db.insert(feed).values({
+      id: "feed-c",
+      userId: other.id,
+      url: "https://c.example.com/rss",
+      title: "Feed C",
+    });
+    await db.insert(article).values({
+      id: "c1",
+      userId: other.id,
+      feedId: "feed-c",
+      url: "https://c.example.com/1",
+      title: "C1",
+      isRead: false,
+    });
+    const app = buildTestApp({ db, user });
+    const res = await app.request("/articles/bulk-mark-read", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ feedIds: ["feed-c"] }),
+    });
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { updated: number };
+    expect(body.updated).toBe(0);
+    const c1 = await db
+      .select()
+      .from(article)
+      .where(eq(article.id, "c1"))
+      .get();
+    expect(c1?.isRead).toBe(false);
+  });
+
+  it("returns 400 when feedIds is empty", async () => {
+    const app = buildTestApp({ db, user });
+    const res = await app.request("/articles/bulk-mark-read", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ feedIds: [] }),
+    });
+    expect(res.status).toBe(400);
+  });
+
+  it("marks selected articleIds as read", async () => {
+    const app = buildTestApp({ db, user });
+    const res = await app.request("/articles/bulk-mark-read", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ articleIds: ["a1", "b1"] }),
+    });
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { updated: number };
+    expect(body.updated).toBe(2);
+    const a1 = await db
+      .select()
+      .from(article)
+      .where(eq(article.id, "a1"))
+      .get();
+    const b1 = await db
+      .select()
+      .from(article)
+      .where(eq(article.id, "b1"))
+      .get();
+    expect(a1?.isRead).toBe(true);
+    expect(b1?.isRead).toBe(true);
+  });
+
+  it("does not touch other users' articles when articleIds given", async () => {
+    const other = await createTestUser(db, { email: "x@example.com" });
+    await db.insert(feed).values({
+      id: "feed-c",
+      userId: other.id,
+      url: "https://c.example.com/rss",
+      title: "Feed C",
+    });
+    await db.insert(article).values({
+      id: "c1",
+      userId: other.id,
+      feedId: "feed-c",
+      url: "https://c.example.com/1",
+      title: "C1",
+      isRead: false,
+    });
+    const app = buildTestApp({ db, user });
+    const res = await app.request("/articles/bulk-mark-read", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ articleIds: ["c1"] }),
+    });
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { updated: number };
+    expect(body.updated).toBe(0);
+    const c1 = await db
+      .select()
+      .from(article)
+      .where(eq(article.id, "c1"))
+      .get();
+    expect(c1?.isRead).toBe(false);
+  });
+
+  it("returns 400 when neither feedIds nor articleIds is given", async () => {
+    const app = buildTestApp({ db, user });
+    const res = await app.request("/articles/bulk-mark-read", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({}),
+    });
+    expect(res.status).toBe(400);
+  });
+});

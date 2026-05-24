@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
-import { and, count, desc, eq, isNull } from "drizzle-orm";
+import { and, count, desc, eq, inArray, isNull } from "drizzle-orm";
 import { z } from "zod";
 
 import { article, feed } from "@acme/db/schema";
@@ -25,6 +25,17 @@ const listQuerySchema = z.object({
 const patchBodySchema = z.object({
   isRead: z.boolean(),
 });
+
+const bulkMarkReadBodySchema = z
+  .object({
+    feedIds: z.array(z.string()).optional(),
+    articleIds: z.array(z.string()).optional(),
+  })
+  .refine(
+    (v) =>
+      (v.feedIds?.length ?? 0) > 0 || (v.articleIds?.length ?? 0) > 0,
+    { message: "feedIds か articleIds のどちらかを指定してください" },
+  );
 
 export const articlesRouter = new Hono<AppEnv>()
   .get("/", async (c) => {
@@ -140,5 +151,33 @@ export const articlesRouter = new Hono<AppEnv>()
         .where(eq(article.id, id))
         .get();
       return c.json(updated);
+    },
+  )
+  .post(
+    "/bulk-mark-read",
+    zValidator("json", bulkMarkReadBodySchema, (result, c) => {
+      if (!result.success) {
+        return c.json({ error: "Invalid request body" }, 400);
+      }
+    }),
+    async (c) => {
+      const user = c.get("user");
+      if (!user) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+      const db = c.get("db");
+      const { feedIds, articleIds } = c.req.valid("json");
+      const target =
+        feedIds && feedIds.length > 0
+          ? inArray(article.feedId, feedIds)
+          : inArray(article.id, articleIds ?? []);
+      const result = await db
+        .update(article)
+        .set({ isRead: true })
+        .where(
+          and(eq(article.userId, user.id), eq(article.isRead, false), target),
+        )
+        .returning({ id: article.id });
+      return c.json({ updated: result.length });
     },
   );

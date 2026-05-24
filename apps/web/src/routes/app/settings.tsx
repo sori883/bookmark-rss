@@ -1,8 +1,13 @@
 import { useState } from "react";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  useNavigate,
+  useRouter,
+} from "@tanstack/react-router";
 
 import { useConfirm } from "~/components/Confirm";
 import { useToast } from "~/components/Toast";
+import { authClient } from "~/auth/client";
 import { makeApiClient } from "~/lib/api-client";
 
 const IOS_SHORTCUT_CLIENT_ID = "bookmark-ios";
@@ -132,7 +137,7 @@ function SettingsPage() {
             value={hour}
             onChange={(e) => setHour(Number(e.target.value))}
             disabled={!enabled}
-            className="w-32 rounded-md border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 text-sm text-[var(--text)] disabled:opacity-50"
+            className="w-32 rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] disabled:opacity-50"
           >
             {HOURS.map((h) => (
               <option key={h} value={h}>
@@ -166,7 +171,7 @@ function SettingsPage() {
               value={webhookUrl}
               onChange={(e) => setWebhookUrl(e.target.value)}
               placeholder="https://discord.com/api/webhooks/..."
-              className="w-full rounded-md border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 text-sm text-[var(--text)] focus:border-[var(--accent)] focus:outline-none"
+              className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] focus:border-[var(--accent)] focus:outline-none"
             />
           )}
           <p className="mt-1 text-xs text-[var(--text-muted)]">
@@ -186,7 +191,193 @@ function SettingsPage() {
       </div>
 
       <IosShortcutSection />
+
+      <AccountSection />
     </section>
+  );
+}
+
+function AccountSection() {
+  const navigate = useNavigate();
+  const confirm = useConfirm();
+  const toast = useToast();
+  const { data: session } = authClient.useSession();
+  const userName = session?.user.name ?? "";
+
+  const [signingOut, setSigningOut] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteInput, setDeleteInput] = useState("");
+
+  const handleSignOut = async () => {
+    const ok = await confirm({
+      title: "サインアウトしますか?",
+      confirmLabel: "サインアウト",
+    });
+    if (!ok) return;
+    setSigningOut(true);
+    try {
+      await authClient.signOut();
+      await navigate({ to: "/" });
+    } finally {
+      setSigningOut(false);
+    }
+  };
+
+  const openDeleteModal = () => {
+    setDeleteInput("");
+    setDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    if (deleting) return;
+    setDeleteModalOpen(false);
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!userName || deleteInput.trim() !== userName) {
+      toast.error("ユーザー名が一致しません");
+      return;
+    }
+    setDeleting(true);
+    try {
+      const api = makeApiClient();
+      const res = await api.api.main.account.$delete();
+      if (!res.ok) {
+        toast.error(`退会に失敗しました (HTTP ${res.status})`);
+        return;
+      }
+      await authClient.signOut();
+      await navigate({ to: "/" });
+    } finally {
+      setDeleting(false);
+      setDeleteModalOpen(false);
+    }
+  };
+
+  return (
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-sm)]">
+      <h2 className="mb-1 text-lg font-semibold text-[var(--text)]">
+        アカウント
+      </h2>
+      <p className="mb-5 text-xs text-[var(--text-muted)]">
+        セッションを終了して再度サインインが必要な状態にします。
+      </p>
+      <button
+        type="button"
+        onClick={() => void handleSignOut()}
+        disabled={signingOut}
+        className="rounded-md border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--text)] hover:border-[var(--danger)] hover:bg-[var(--danger-soft)] hover:text-[var(--danger)] disabled:opacity-50"
+      >
+        {signingOut ? "サインアウト中..." : "サインアウト"}
+      </button>
+
+      <div className="mt-8 border-t border-[var(--border)] pt-6">
+        <h3 className="mb-1 text-sm font-semibold text-[var(--danger)]">
+          退会
+        </h3>
+        <p className="mb-3 text-xs text-[var(--text-muted)]">
+          アカウントと紐づく全てのデータ (フィード・記事・ブックマーク・タグ・通知設定・おすすめ履歴) を完全に削除します。
+          この操作は取り消せません。
+        </p>
+        <button
+          type="button"
+          onClick={openDeleteModal}
+          className="rounded-md border border-[var(--danger)] bg-[var(--danger-soft)] px-4 py-2 text-sm font-medium text-[var(--danger)] hover:bg-[var(--danger)] hover:text-white"
+        >
+          アカウントを削除
+        </button>
+      </div>
+
+      {deleteModalOpen && (
+        <DeleteAccountModal
+          userName={userName}
+          value={deleteInput}
+          onChange={setDeleteInput}
+          deleting={deleting}
+          onConfirm={() => void handleDeleteAccount()}
+          onCancel={closeDeleteModal}
+        />
+      )}
+    </div>
+  );
+}
+
+interface DeleteAccountModalProps {
+  userName: string;
+  value: string;
+  onChange: (next: string) => void;
+  deleting: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+function DeleteAccountModal({
+  userName,
+  value,
+  onChange,
+  deleting,
+  onConfirm,
+  onCancel,
+}: DeleteAccountModalProps) {
+  const matched = value.trim() === userName && userName.length > 0;
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="delete-account-title"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      onClick={onCancel}
+    >
+      <div
+        className="w-full max-w-md rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-md)]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3
+          id="delete-account-title"
+          className="mb-2 text-base font-semibold text-[var(--danger)]"
+        >
+          本当に退会しますか?
+        </h3>
+        <p className="mb-4 text-xs text-[var(--text-muted)]">
+          アカウントと全データが完全に削除されます。 この操作は取り消せません。
+          続行するには、 ご自身のユーザー名
+          (<code className="break-all text-[var(--text)]">{userName}</code>)
+          を下に入力してください。
+        </p>
+        <input
+          type="text"
+          autoFocus
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={userName}
+          disabled={deleting}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && matched && !deleting) onConfirm();
+            if (e.key === "Escape" && !deleting) onCancel();
+          }}
+          className="mb-5 w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] focus:border-[var(--danger)] focus:outline-none"
+        />
+        <div className="flex justify-end gap-2">
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={deleting}
+            className="rounded-md border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--text)] hover:bg-[var(--surface-2)] disabled:opacity-50"
+          >
+            キャンセル
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            disabled={deleting || !matched}
+            className="rounded-md border border-[var(--danger)] bg-[var(--danger-soft)] px-4 py-2 text-sm font-medium text-[var(--danger)] hover:bg-[var(--danger)] hover:text-white disabled:opacity-50"
+          >
+            {deleting ? "削除中..." : "退会する"}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -293,7 +484,7 @@ function IosShortcutSection() {
                 type={revealed ? "text" : "password"}
                 value={token}
                 readOnly
-                className="w-full rounded-md border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 font-mono text-sm text-[var(--text)]"
+                className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 font-mono text-sm text-[var(--text)]"
               />
               <button
                 type="button"
@@ -320,7 +511,7 @@ function IosShortcutSection() {
                 type="text"
                 value={endpoint}
                 readOnly
-                className="w-full rounded-md border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 font-mono text-sm text-[var(--text)]"
+                className="w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 font-mono text-sm text-[var(--text)]"
               />
               <button
                 type="button"
@@ -351,7 +542,7 @@ function IosShortcutSection() {
         </button>
       )}
 
-      <div className="rounded-md border border-[var(--border)] bg-[var(--surface-2)] p-4 text-sm text-[var(--text)]">
+      <div className="rounded-md border border-[var(--border)] bg-[var(--surface)] p-4 text-sm text-[var(--text)]">
         <h3 className="mb-2 text-sm font-semibold">ショートカットの作り方</h3>
         <ol className="list-decimal space-y-1 pl-5 text-xs text-[var(--text-muted)]">
           <li>iPhone で「ショートカット」 App を開き、 右上の + で新規作成。</li>

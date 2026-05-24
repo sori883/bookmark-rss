@@ -48,6 +48,7 @@ function FeedsPage() {
 
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkDeleting, setBulkDeleting] = useState(false);
+  const [bulkMarkingRead, setBulkMarkingRead] = useState(false);
   const allIds = useMemo(() => feeds.map((f) => f.id), [feeds]);
   const allChecked =
     allIds.length > 0 && allIds.every((id) => selected.has(id));
@@ -183,6 +184,33 @@ function FeedsPage() {
     await router.invalidate();
   };
 
+  const onBulkMarkRead = async () => {
+    const feedIds = [...selected];
+    if (feedIds.length === 0) return;
+    const ok = await confirm({
+      title: `${feedIds.length} 件のフィードの未読記事を全て既読にしますか?`,
+      confirmLabel: "既読にする",
+    });
+    if (!ok) return;
+    setBulkMarkingRead(true);
+    try {
+      const api = makeApiClient();
+      const res = await api.api.main.articles["bulk-mark-read"].$post({
+        json: { feedIds },
+      });
+      if (!res.ok) {
+        toast.error(`既読化失敗: HTTP ${res.status}`);
+        return;
+      }
+      const body = await res.json();
+      toast.success(`${body.updated} 件の記事を既読にしました`);
+      setSelected(new Set());
+      await router.invalidate();
+    } finally {
+      setBulkMarkingRead(false);
+    }
+  };
+
   const onBulkDelete = async () => {
     const ids = [...selected];
     if (ids.length === 0) return;
@@ -299,59 +327,62 @@ function FeedsPage() {
 
   return (
     <div className="space-y-6">
-      <Card title="フィードを追加">
-        <form onSubmit={onSubmit} className="flex gap-2">
-          <input
-            type="url"
-            required
-            placeholder="https://example.com/rss"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            disabled={submitting}
-            className="flex-1 rounded-md px-3 py-2 text-sm"
-          />
-          <button
-            type="submit"
-            disabled={submitting}
-            className="rounded-md bg-[var(--accent)] px-4 py-2 text-sm font-medium text-[var(--accent-fg)] hover:bg-[var(--accent-strong)] disabled:opacity-50"
+      <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3 shadow-[var(--shadow-sm)]">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <form onSubmit={onSubmit} className="flex flex-1 gap-2">
+            <input
+              type="url"
+              required
+              placeholder="https://example.com/rss"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              disabled={submitting}
+              className="flex-1 rounded-md px-3 py-1.5 text-sm"
+            />
+            <button
+              type="submit"
+              disabled={submitting}
+              className="rounded-md bg-[var(--accent)] px-3 py-1.5 text-sm font-medium text-[var(--accent-fg)] hover:bg-[var(--accent-strong)] disabled:opacity-50"
+            >
+              {submitting ? "追加中..." : "追加"}
+            </button>
+          </form>
+          <label
+            className={`inline-flex shrink-0 cursor-pointer items-center justify-center rounded-md border border-[var(--border)] bg-[var(--surface-2)] px-3 py-1.5 text-xs font-medium text-[var(--text)] hover:bg-[var(--accent-soft)] ${importing ? "pointer-events-none opacity-50" : ""}`}
           >
-            {submitting ? "追加中..." : "追加"}
-          </button>
-        </form>
-        {formError && (
-          <p className="mt-2 text-sm text-[var(--danger)]">{formError}</p>
+            {importing ? "インポート中..." : "OPML をインポート"}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".opml,.xml,application/xml,text/xml"
+              disabled={importing}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) void onImport(file);
+              }}
+              className="hidden"
+            />
+          </label>
+        </div>
+        {(formError != null || importMessage != null) && (
+          <div className="mt-2 space-y-1 text-sm">
+            {formError && (
+              <p className="text-[var(--danger)]">{formError}</p>
+            )}
+            {importMessage && (
+              <p
+                className={
+                  importMessage.type === "error"
+                    ? "text-[var(--danger)]"
+                    : "text-[var(--text-muted)]"
+                }
+              >
+                {importMessage.text}
+              </p>
+            )}
+          </div>
         )}
-      </Card>
-
-      <Card title="OPML からインポート">
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".opml,.xml,application/xml,text/xml"
-          disabled={importing}
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) void onImport(file);
-          }}
-          className="block w-full text-sm text-[var(--text-muted)] file:mr-3 file:rounded-md file:border file:border-[var(--border)] file:bg-[var(--surface-2)] file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-[var(--text)] hover:file:bg-[var(--accent-soft)]"
-        />
-        {importing && (
-          <p className="mt-2 text-sm text-[var(--text-muted)]">
-            インポート中...
-          </p>
-        )}
-        {importMessage && (
-          <p
-            className={`mt-2 text-sm ${
-              importMessage.type === "error"
-                ? "text-[var(--danger)]"
-                : "text-[var(--text-muted)]"
-            }`}
-          >
-            {importMessage.text}
-          </p>
-        )}
-      </Card>
+      </section>
 
       <Card title="カテゴリ">
         <form onSubmit={onAddCategory} className="flex gap-2">
@@ -489,6 +520,16 @@ function FeedsPage() {
                     </option>
                   ))}
                 </select>
+                <button
+                  type="button"
+                  onClick={onBulkMarkRead}
+                  disabled={selected.size === 0 || bulkMarkingRead}
+                  className="rounded-md border border-[var(--border)] px-3 py-1 text-xs font-medium text-[var(--text-muted)] enabled:hover:border-[var(--accent)] enabled:hover:bg-[var(--accent-soft)] enabled:hover:text-[var(--accent-strong)] disabled:opacity-50"
+                >
+                  {bulkMarkingRead
+                    ? "既読化中..."
+                    : `選択を既読 (${selected.size})`}
+                </button>
                 <button
                   type="button"
                   onClick={onBulkDelete}

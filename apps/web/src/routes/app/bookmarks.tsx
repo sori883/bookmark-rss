@@ -71,9 +71,6 @@ function BookmarksPage() {
   const [searchInput, setSearchInput] = useState(search.q ?? "");
   const [newTagName, setNewTagName] = useState("");
   const [tagError, setTagError] = useState<string | null>(null);
-  const [editingTagId, setEditingTagId] = useState<string | null>(null);
-  const [editingTagName, setEditingTagName] = useState("");
-  const [editingTagError, setEditingTagError] = useState<string | null>(null);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,55 +164,6 @@ function BookmarksPage() {
     await router.invalidate();
   };
 
-  const onDeleteTag = async (id: string) => {
-    const ok = await confirm({
-      title: "タグを削除しますか?",
-      message: "ブックマークからタグが外れます。",
-      destructive: true,
-      confirmLabel: "削除",
-    });
-    if (!ok) return;
-    const api = makeApiClient();
-    const res = await api.api.main.tags[":id"].$delete({ param: { id } });
-    if (!res.ok) {
-      toast.error(`削除失敗: HTTP ${res.status}`);
-      return;
-    }
-    await router.invalidate();
-  };
-
-  const startEditingTag = (id: string, name: string) => {
-    setEditingTagId(id);
-    setEditingTagName(name);
-    setEditingTagError(null);
-  };
-
-  const cancelEditingTag = () => {
-    setEditingTagId(null);
-    setEditingTagName("");
-    setEditingTagError(null);
-  };
-
-  const saveEditingTag = async (id: string, originalName: string) => {
-    const name = editingTagName.trim();
-    if (!name || name === originalName) {
-      cancelEditingTag();
-      return;
-    }
-    const api = makeApiClient();
-    const res = await api.api.main.tags[":id"].$patch({
-      param: { id },
-      json: { name },
-    });
-    if (!res.ok) {
-      const body = (await res.json().catch(() => ({}))) as { error?: string };
-      setEditingTagError(body.error ?? `HTTP ${res.status}`);
-      return;
-    }
-    cancelEditingTag();
-    await router.invalidate();
-  };
-
   const onChangeFilterTag = (raw: string) => {
     void navigate({
       search: (prev) => ({ ...prev, tagId: raw === "" ? undefined : raw }),
@@ -297,7 +245,7 @@ function BookmarksPage() {
 
   return (
     <div className="space-y-6">
-      <Card title="ブックマークを追加">
+      <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3 shadow-[var(--shadow-sm)]">
         <form onSubmit={onSubmit} className="flex gap-2">
           <input
             type="url"
@@ -306,117 +254,43 @@ function BookmarksPage() {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             disabled={submitting}
-            className="flex-1 rounded-md px-3 py-2 text-sm"
+            className="flex-1 rounded-md px-3 py-1.5 text-sm"
           />
           <button
             type="submit"
             disabled={submitting}
-            className="rounded-md bg-[var(--accent)] px-4 py-2 text-sm font-medium text-[var(--accent-fg)] hover:bg-[var(--accent-strong)] disabled:opacity-50"
+            className="rounded-md bg-[var(--accent)] px-3 py-1.5 text-sm font-medium text-[var(--accent-fg)] hover:bg-[var(--accent-strong)] disabled:opacity-50"
           >
             {submitting ? "取得中..." : "追加"}
           </button>
         </form>
-        <p className="mt-2 text-xs text-[var(--text-muted)]">
-          タイトル・サムネイルはページの OGP から自動取得します。
-        </p>
-        {formError && (
+        {formError != null && (
           <p className="mt-2 text-sm text-[var(--danger)]">{formError}</p>
         )}
-      </Card>
 
-      <Card title="タグ">
-        <form onSubmit={onAddTag} className="flex gap-2">
+        <form
+          onSubmit={onAddTag}
+          className="mt-3 flex items-center gap-2 border-t border-[var(--border)] pt-3"
+        >
           <input
             type="text"
-            placeholder="新しいタグ名"
+            placeholder="新しいタグ"
             value={newTagName}
             onChange={(e) => setNewTagName(e.target.value)}
-            className="flex-1 rounded-md px-3 py-2 text-sm"
+            className="flex-1 rounded-md px-3 py-1.5 text-sm"
           />
           <button
             type="submit"
             disabled={!newTagName.trim()}
-            className="rounded-md bg-[var(--accent)] px-4 py-2 text-sm font-medium text-[var(--accent-fg)] hover:bg-[var(--accent-strong)] disabled:opacity-50"
+            className="rounded-md bg-[var(--accent)] px-3 py-1.5 text-sm font-medium text-[var(--accent-fg)] hover:bg-[var(--accent-strong)] disabled:opacity-50"
           >
-            追加
+            タグ追加
           </button>
         </form>
-        {tagError && (
+        {tagError != null && (
           <p className="mt-2 text-sm text-[var(--danger)]">{tagError}</p>
         )}
-        {tags.length > 0 && (
-          <ul className="mt-3 flex flex-wrap gap-2">
-            {tags.map((t) => {
-              const isEditing = editingTagId === t.id;
-              return (
-                <li
-                  key={t.id}
-                  className="inline-flex items-center gap-1 rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-3 py-1 text-xs"
-                >
-                  {isEditing ? (
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        void saveEditingTag(t.id, t.name);
-                      }}
-                      className="inline-flex items-center gap-1"
-                    >
-                      <input
-                        type="text"
-                        autoFocus
-                        value={editingTagName}
-                        onChange={(e) => setEditingTagName(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Escape") cancelEditingTag();
-                        }}
-                        className="w-24 rounded-md border border-[var(--border)] bg-[var(--surface)] px-2 py-0.5 text-xs"
-                      />
-                      <button
-                        type="submit"
-                        className="text-[var(--accent-strong)]"
-                        title="保存"
-                      >
-                        ✓
-                      </button>
-                      <button
-                        type="button"
-                        onClick={cancelEditingTag}
-                        className="text-[var(--text-muted)]"
-                        title="キャンセル"
-                      >
-                        ×
-                      </button>
-                    </form>
-                  ) : (
-                    <>
-                      <span className="text-[var(--text)]">#{t.name}</span>
-                      <button
-                        type="button"
-                        onClick={() => startEditingTag(t.id, t.name)}
-                        className="text-[var(--text-muted)] hover:text-[var(--accent-strong)]"
-                        title="リネーム"
-                      >
-                        ✎
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => onDeleteTag(t.id)}
-                        className="text-[var(--text-muted)] hover:text-[var(--danger)]"
-                        title="削除"
-                      >
-                        ×
-                      </button>
-                    </>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        )}
-        {editingTagError && (
-          <p className="mt-2 text-sm text-[var(--danger)]">{editingTagError}</p>
-        )}
-      </Card>
+      </section>
 
       <Card title="ブックマーク一覧">
         {error && <p className="text-sm text-[var(--danger)]">{error}</p>}

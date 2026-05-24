@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Moon, Sun } from "lucide-react";
 
 type ThemeMode = "light" | "dark";
 
@@ -35,14 +36,20 @@ export default function ThemeToggle() {
     window.localStorage.setItem("theme", next);
   };
 
+  const isDark = mode === "dark";
   return (
     <button
       type="button"
       onClick={toggle}
-      aria-label={`Theme: ${mode} (click to change)`}
-      className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-xs font-medium text-[var(--text)] hover:bg-[var(--surface-2)]"
+      aria-label={isDark ? "ライトモードに切り替え" : "ダークモードに切り替え"}
+      title={isDark ? "ライトモードに切り替え" : "ダークモードに切り替え"}
+      className="rounded-md p-1.5 text-[var(--text-muted)] hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
     >
-      {mode === "light" ? "Light" : "Dark"}
+      {isDark ? (
+        <Sun className="h-4 w-4" aria-hidden />
+      ) : (
+        <Moon className="h-4 w-4" aria-hidden />
+      )}
     </button>
   );
 }

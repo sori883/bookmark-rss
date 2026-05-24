@@ -8,12 +8,12 @@ import {
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import { ConfirmProvider } from "../components/Confirm";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
 import { ToastProvider } from "../components/Toast";
 import appCss from "../styles.css?url";
 
 const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getItem('theme');var mode=(stored==='light'||stored==='dark')?stored:(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(mode);root.setAttribute('data-theme',mode);root.style.colorScheme=mode;}catch(e){}})();`;
+
+const SCROLL_REVEAL_SCRIPT = `(function(){var t;var root=document.documentElement;function on(){root.classList.add('is-scrolling');clearTimeout(t);t=setTimeout(function(){root.classList.remove('is-scrolling');},800);}window.addEventListener('scroll',on,{capture:true,passive:true});window.addEventListener('wheel',on,{capture:true,passive:true});window.addEventListener('touchmove',on,{capture:true,passive:true});})();`;
 
 export const Route = createRootRoute({
   head: () => ({
@@ -52,15 +52,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html lang="ja" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: SCROLL_REVEAL_SCRIPT }} />
         <HeadContent />
       </head>
-      <body className="flex min-h-screen flex-col">
+      <body className="min-h-screen">
         <ToastProvider>
-          <ConfirmProvider>
-            <Header />
-            <div className="flex-1">{children}</div>
-            <Footer />
-          </ConfirmProvider>
+          <ConfirmProvider>{children}</ConfirmProvider>
         </ToastProvider>
         <TanStackDevtools
           config={{ position: "bottom-right" }}

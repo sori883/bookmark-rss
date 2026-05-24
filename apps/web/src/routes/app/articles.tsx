@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from "react";
 import {
   Link,
   createFileRoute,
@@ -5,6 +6,7 @@ import {
   useRouter,
 } from "@tanstack/react-router";
 
+import { useConfirm } from "~/components/Confirm";
 import { useToast } from "~/components/Toast";
 import { makeApiClient } from "~/lib/api-client";
 
@@ -101,6 +103,56 @@ function ArticlesPage() {
   const router = useRouter();
   const navigate = useNavigate({ from: "/app/articles" });
   const toast = useToast();
+  const confirm = useConfirm();
+
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkMarking, setBulkMarking] = useState(false);
+  const allIds = useMemo(() => articles.map((a) => a.id), [articles]);
+  const allChecked =
+    allIds.length > 0 && allIds.every((id) => selected.has(id));
+  useEffect(() => {
+    setSelected(new Set());
+  }, [search.page, search.categoryId, search.unread]);
+
+  const toggleOne = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleAll = () => {
+    setSelected(allChecked ? new Set() : new Set(allIds));
+  };
+
+  const onBulkMarkRead = async () => {
+    const articleIds = [...selected];
+    if (articleIds.length === 0) return;
+    const ok = await confirm({
+      title: `${articleIds.length} 件の記事を既読にしますか?`,
+      confirmLabel: "既読にする",
+    });
+    if (!ok) return;
+    setBulkMarking(true);
+    try {
+      const api = makeApiClient();
+      const res = await api.api.main.articles["bulk-mark-read"].$post({
+        json: { articleIds },
+      });
+      if (!res.ok) {
+        toast.error(`既読化失敗: HTTP ${res.status}`);
+        return;
+      }
+      const body = await res.json();
+      toast.success(`${body.updated} 件の記事を既読にしました`);
+      setSelected(new Set());
+      await router.invalidate();
+    } finally {
+      setBulkMarking(false);
+    }
+  };
 
   const toggleRead = async (id: string, next: boolean) => {
     const api = makeApiClient();
@@ -201,14 +253,43 @@ function ArticlesPage() {
               : "未読の記事はありません。"}
           </p>
         ) : (
-          <ul className="mt-4 divide-y divide-[var(--border)]">
+          <>
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] pb-3">
+              <label className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
+                <input
+                  type="checkbox"
+                  checked={allChecked}
+                  onChange={toggleAll}
+                  className="h-4 w-4 rounded border-[var(--border)] accent-[var(--accent)]"
+                />
+                このページを全選択
+              </label>
+              <button
+                type="button"
+                onClick={onBulkMarkRead}
+                disabled={selected.size === 0 || bulkMarking}
+                className="rounded-md border border-[var(--border)] px-3 py-1 text-xs font-medium text-[var(--text-muted)] enabled:hover:border-[var(--accent)] enabled:hover:bg-[var(--accent-soft)] enabled:hover:text-[var(--accent-strong)] disabled:opacity-50"
+              >
+                {bulkMarking
+                  ? "既読化中..."
+                  : `選択を既読 (${selected.size})`}
+              </button>
+            </div>
+            <ul className="divide-y divide-[var(--border)]">
             {articles.map((a) => {
               const feedTitle = feedsById[a.feedId]?.title;
               return (
                 <li
                   key={a.id}
-                  className="flex items-start justify-between gap-3 py-3 first:pt-0 last:pb-0"
+                  className="flex items-start justify-between gap-3 py-3 last:pb-0"
                 >
+                  <input
+                    type="checkbox"
+                    checked={selected.has(a.id)}
+                    onChange={() => toggleOne(a.id)}
+                    className="mt-1 h-4 w-4 shrink-0 rounded border-[var(--border)] accent-[var(--accent)]"
+                    aria-label={`${a.title} を選択`}
+                  />
                   {a.ogImageUrl && (
                     <img
                       src={a.ogImageUrl}
@@ -259,7 +340,8 @@ function ArticlesPage() {
                 </li>
               );
             })}
-          </ul>
+            </ul>
+          </>
         )}
 
         {total > perPage && (
