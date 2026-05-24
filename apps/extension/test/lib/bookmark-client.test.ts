@@ -10,15 +10,13 @@ const jsonResponse = (status: number, body: unknown) =>
 
 describe("addBookmark", () => {
   it("posts the URL to /api/main/bookmarks with the bearer token", async () => {
-    const fetchImpl = vi
-      .fn<typeof fetch>()
-      .mockResolvedValue(
-        jsonResponse(201, {
-          id: "b1",
-          url: "https://example.com",
-          title: "Example",
-        }),
-      );
+    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(
+      jsonResponse(201, {
+        id: "b1",
+        url: "https://example.com",
+        title: "Example",
+      }),
+    );
 
     await addBookmark(
       {
