@@ -26,9 +26,13 @@ export function initAuth<
     secret: options.secret,
     trustedOrigins: [options.trustedUrl, "chrome-extension://*"],
     session: {
-      // ログイン期間を無期限相当にする（100年）。
-      // Cookie の Max-Age と DB の expiresAt がこの値で設定される。
-      expiresIn: 60 * 60 * 24 * 365 * 100,
+      // Cookie の Max-Age はブラウザ／better-call の制約で最大 400 日
+      // (34,560,000 秒) に制限される。これを超える値を設定するとセッション
+      // Cookie 発行時に例外となり、OAuth コールバックが失敗する。
+      // そのため上限いっぱいの 400 日を設定し、下記 updateAge による
+      // スライディング更新で「無期限相当」（アクセスし続ける限り失効しない）
+      // を実現する。
+      expiresIn: 60 * 60 * 24 * 400,
       // アクセスのたびに有効期限を先送りするため、更新間隔は短めにする。
       updateAge: 60 * 60 * 24,
     },
