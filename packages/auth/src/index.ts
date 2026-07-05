@@ -25,6 +25,13 @@ export function initAuth<
     baseURL: options.authUrl,
     secret: options.secret,
     trustedOrigins: [options.trustedUrl, "chrome-extension://*"],
+    session: {
+      // ログイン期間を無期限相当にする（100年）。
+      // Cookie の Max-Age と DB の expiresAt がこの値で設定される。
+      expiresIn: 60 * 60 * 24 * 365 * 100,
+      // アクセスのたびに有効期限を先送りするため、更新間隔は短めにする。
+      updateAge: 60 * 60 * 24,
+    },
     plugins: [
       bearer(),
       deviceAuthorization({ schema: {} }),

@@ -89,7 +89,7 @@ function BookmarkDetailPage() {
 
       <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-sm)]">
         {bookmark.contentMarkdown ? (
-          <article className="prose prose-sm md:prose-base prose-headings:text-[var(--text)] prose-p:text-[var(--text)] prose-strong:text-[var(--text)] prose-li:text-[var(--text)] prose-blockquote:text-[var(--text-muted)] prose-blockquote:border-l-[var(--border-strong)] prose-a:text-[var(--accent-strong)] prose-code:text-[var(--accent-strong)] prose-code:before:content-none prose-code:after:content-none prose-pre:bg-[var(--surface-2)] prose-pre:text-[var(--text)] prose-hr:border-[var(--border)] prose-th:text-[var(--text)] prose-td:text-[var(--text)] max-w-none">
+          <article className="prose prose-sm md:prose-base prose-headings:text-[var(--text)] prose-p:text-[var(--text)] prose-strong:text-[var(--text)] prose-li:text-[var(--text)] prose-blockquote:text-[var(--text-muted)] prose-blockquote:border-l-[var(--border-strong)] prose-a:text-[var(--accent-strong)] prose-a:break-words prose-code:text-[var(--accent-strong)] prose-code:break-words prose-code:before:content-none prose-code:after:content-none prose-pre:overflow-x-auto prose-pre:bg-[var(--surface-2)] prose-pre:text-[var(--text)] prose-hr:border-[var(--border)] prose-th:text-[var(--text)] prose-td:text-[var(--text)] max-w-none break-words">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
