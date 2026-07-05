@@ -1,0 +1,22 @@
+# Core
+
+- bookmark-rss: personal RSS reader + bookmark manager deployed on Cloudflare Workers.
+- Monorepo layout: `apps/*` runnable apps/workers, `packages/*` shared domain libraries, `tooling/*` shared config packages.
+- Read `mem:tech_stack` for framework/package-manager/runtime pins.
+- Read `mem:suggested_commands` for common dev/test/db/deploy commands.
+- Read `mem:conventions` for project-specific TS/lint/format/env/style conventions.
+- Read `mem:task_completion` for validation commands before finishing code tasks.
+- Main app surfaces:
+  - `apps/web`: TanStack Start React app on Cloudflare Workers; mounts UI routes and API proxy routes.
+  - `apps/extension`: WXT browser extension popup for adding bookmarks.
+  - `apps/cli`: Node CLI binary `bookmark` using device auth flow.
+  - `apps/worker-jobs`: scheduled/internal worker for feed ingest, bookmark extraction, FTS maintenance.
+  - `apps/worker-ai`: scheduled/internal worker for daily recommendations via Vertex Gemini through Cloudflare AI Gateway.
+- Shared packages:
+  - `packages/api`: Hono API router, routes, middleware, service adapters.
+  - `packages/db`: Drizzle schema/client/migrations/extras for libSQL/Turso SQLite + FTS5.
+  - `packages/auth`: Better Auth server integration and generated auth schema workflow.
+  - `packages/auth-client`: shared device-flow/client auth helpers for CLI/extension.
+  - `packages/jobs`: reusable ingest/extract/recommendation job logic.
+- Data path: web/extension/CLI call Web/API; Web uses Drizzle DB and service binding `JOBS`; worker-jobs and worker-ai read/write the same libSQL DB. AI can notify Discord; webhook URL encrypted in DB.
+- Generated/cache dirs commonly present and not architectural sources: `node_modules`, `.turbo`, `.cache`, `.wrangler`, `dist`, `.wxt`, `.tanstack`.
