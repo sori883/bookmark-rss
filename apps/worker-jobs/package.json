@@ -21,7 +21,7 @@
     "@acme/jobs": "workspace:*",
     "@hono/zod-validator": "^0.8.0",
     "drizzle-orm": "catalog:",
-    "hono": "^4.12.18",
+    "hono": "^4.12.33",
     "zod": "catalog:"
   },
   "devDependencies": {
