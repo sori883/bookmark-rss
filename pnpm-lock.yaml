@@ -94,7 +94,7 @@ importers:
         specifier: 'catalog:'
         version: 25.8.0
       dotenv:
-        specifier: ^17.0.0
+        specifier: ^17.4.2
         version: 17.4.2
       eslint:
         specifier: 'catalog:'

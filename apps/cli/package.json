@@ -36,7 +36,7 @@
     "@acme/prettier-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
     "@types/node": "catalog:",
-    "dotenv": "^17.0.0",
+    "dotenv": "^17.4.2",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "tsdown": "^0.18.0",
