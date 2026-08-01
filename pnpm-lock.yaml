@@ -688,8 +688,8 @@ importers:
         specifier: 'catalog:'
         version: 4.3.0
       postcss:
-        specifier: ^8.5.6
-        version: 8.5.14
+        specifier: ^8.5.25
+        version: 8.5.25
       tailwindcss:
         specifier: 'catalog:'
         version: 4.3.0
@@ -5637,6 +5637,11 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
+  nanoid@3.3.16:
+    resolution: {integrity: sha512-bzlKTyNJ7+LdGIIwy8ijFpIqEQIvafahV7eYykJ8Cvh42EdJeODoJ6gUJXpQJvej1BddH8OqTXZNE/KfbWAu8Q==}
+    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+    hasBin: true
+
   nanospinner@1.2.2:
     resolution: {integrity: sha512-Zt/AmG6qRU3e+WnzGGLuMCEAO/dAu45stNbHY223tUxldaDAeE+FxSPsd9Q+j+paejmm0ZbrNVs5Sraqy3dRxA==}
 
@@ -5892,6 +5897,10 @@ packages:
 
   postcss@8.5.14:
     resolution: {integrity: sha512-SoSL4+OSEtR99LHFZQiJLkT59C5B1amGO1NzTwj7TT1qCUgUO6hxOvzkOYxD+vMrXBM3XJIKzokoERdqQq/Zmg==}
+    engines: {node: ^10 || ^12 || >=14}
+
+  postcss@8.5.25:
+    resolution: {integrity: sha512-DTPx3RWSSnWyzLxQnlH0rJP+EW5ekl16ZU4/psbIhA0e53kJfdgaN5vKM+xP7yJtXVu+nfdVFmlgFDEKAe4Pyw==}
     engines: {node: ^10 || ^12 || >=14}
 
   postgres-array@2.0.0:
@@ -8745,7 +8754,7 @@ snapshots:
       '@alloc/quick-lru': 5.2.0
       '@tailwindcss/node': 4.3.0
       '@tailwindcss/oxide': 4.3.0
-      postcss: 8.5.14
+      postcss: 8.5.25
       tailwindcss: 4.3.0
 
   '@tailwindcss/typography@0.5.20(tailwindcss@4.3.0)':
@@ -11882,6 +11891,8 @@ snapshots:
 
   nanoid@3.3.12: {}
 
+  nanoid@3.3.16: {}
+
   nanospinner@1.2.2:
     dependencies:
       picocolors: 1.1.1
@@ -12201,6 +12212,12 @@ snapshots:
   postcss@8.5.14:
     dependencies:
       nanoid: 3.3.12
+      picocolors: 1.1.1
+      source-map-js: 1.2.1
+
+  postcss@8.5.25:
+    dependencies:
+      nanoid: 3.3.16
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
