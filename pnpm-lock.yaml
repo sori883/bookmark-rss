@@ -560,8 +560,8 @@ importers:
         specifier: ^0.6.0
         version: 0.6.0
       ai:
-        specifier: ^6.0.243
-        version: 6.0.243(zod@4.4.3)
+        specifier: ^6.0.244
+        version: 6.0.244(zod@4.4.3)
       drizzle-orm:
         specifier: 'catalog:'
         version: 0.45.2(@libsql/client@0.17.4)(@opentelemetry/api@1.9.1)(@prisma/client@5.22.0)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(kysely@0.28.17)(pg@8.20.0)
@@ -3734,8 +3734,8 @@ packages:
     resolution: {integrity: sha512-+Ut8d9LLqwEvHHJl1+PIHqoyDxFgVN847JTVM3Izi3xHDWPE4UtzzXysMZQs64DMcrJfBeS/uoEP4AD3HQHnQQ==}
     engines: {node: '>=12.0'}
 
-  ai@6.0.243:
-    resolution: {integrity: sha512-brpUfeNJX/pHdMvRCtUkxTQEn4iUvumTTZilrbsDyt2naivxa1c2/896l4wKENAtu6twethhN9KN3cB57ul9jw==}
+  ai@6.0.244:
+    resolution: {integrity: sha512-5/KQrhbFfpcdem2Je6JVzPq4QGL+kerdnHQ/Tatsyk3BZXPZSu23/l9FNhodAEDjLlrY660wWLN/ug126bSJMg==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
@@ -10023,7 +10023,7 @@ snapshots:
 
   adm-zip@0.5.17: {}
 
-  ai@6.0.243(zod@4.4.3):
+  ai@6.0.244(zod@4.4.3):
     dependencies:
       '@ai-sdk/gateway': 3.0.165(zod@4.4.3)
       '@ai-sdk/provider': 3.0.14
