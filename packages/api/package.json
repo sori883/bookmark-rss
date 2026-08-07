@@ -26,7 +26,7 @@
     "@hono/zod-validator": "^0.9.0",
     "drizzle-orm": "catalog:",
     "fast-xml-parser": "^5.10.1",
-    "hono": "^4.13.0",
+    "hono": "^4.13.1",
     "zod": "catalog:"
   },
   "devDependencies": {
