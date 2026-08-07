@@ -28,7 +28,7 @@
     "@acme/eslint-config": "workspace:^",
     "@acme/prettier-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
-    "@cloudflare/vite-plugin": "^1.51.0",
+    "@cloudflare/vite-plugin": "^1.51.1",
     "@types/node": "catalog:",
     "eslint": "catalog:",
     "prettier": "catalog:",
