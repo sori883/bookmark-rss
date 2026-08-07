@@ -34,7 +34,7 @@
     "@tanstack/react-start": "latest",
     "@tanstack/router-plugin": "^1.168.26",
     "drizzle-orm": "catalog:",
-    "lucide-react": "^1.28.0",
+    "lucide-react": "^1.29.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-markdown": "^10.1.0",
