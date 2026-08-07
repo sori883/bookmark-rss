@@ -32,7 +32,7 @@
     "@tanstack/react-router-devtools": "latest",
     "@tanstack/react-router-ssr-query": "latest",
     "@tanstack/react-start": "latest",
-    "@tanstack/router-plugin": "^1.168.26",
+    "@tanstack/router-plugin": "^1.168.27",
     "drizzle-orm": "catalog:",
     "lucide-react": "^1.29.0",
     "react": "^19.2.8",
