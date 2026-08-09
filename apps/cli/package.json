@@ -26,7 +26,7 @@
   "dependencies": {
     "@acme/api": "workspace:*",
     "@acme/auth-client": "workspace:*",
-    "@clack/prompts": "^0.11.0",
+    "@clack/prompts": "^1.7.0",
     "citty": "^0.2.2",
     "hono": "^4.13.1",
     "picocolors": "^1.1.1"
