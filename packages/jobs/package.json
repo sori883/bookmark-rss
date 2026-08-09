@@ -19,7 +19,7 @@
   "dependencies": {
     "@acme/db": "workspace:*",
     "@mozilla/readability": "^0.6.0",
-    "ai": "^6.0.246",
+    "ai": "^7.0.58",
     "drizzle-orm": "catalog:",
     "fast-xml-parser": "^5.10.1",
     "linkedom": "^0.18.13",
