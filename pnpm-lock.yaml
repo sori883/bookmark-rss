@@ -75,8 +75,8 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2
       hono:
-        specifier: ^4.13.1
-        version: 4.13.1
+        specifier: ^4.13.13
+        version: 4.13.13
       picocolors:
         specifier: ^1.1.1
         version: 1.1.1
@@ -356,13 +356,13 @@ importers:
         version: link:../../packages/jobs
       '@hono/zod-validator':
         specifier: ^0.9.1
-        version: 0.9.1(hono@4.13.1)(zod@4.4.3)
+        version: 0.9.1(hono@4.13.13)(zod@4.4.3)
       drizzle-orm:
         specifier: 'catalog:'
         version: 0.45.3(@libsql/client@0.17.4)(@opentelemetry/api@1.9.1)(@prisma/client@5.22.0)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(kysely@0.28.17)(pg@8.20.0)
       hono:
-        specifier: ^4.13.1
-        version: 4.13.1
+        specifier: ^4.13.13
+        version: 4.13.13
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -411,7 +411,7 @@ importers:
         version: link:../jobs
       '@hono/zod-validator':
         specifier: ^0.9.1
-        version: 0.9.1(hono@4.13.1)(zod@4.4.3)
+        version: 0.9.1(hono@4.13.13)(zod@4.4.3)
       drizzle-orm:
         specifier: 'catalog:'
         version: 0.45.3(@libsql/client@0.17.4)(@opentelemetry/api@1.9.1)(@prisma/client@5.22.0)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(kysely@0.28.17)(pg@8.20.0)
@@ -419,8 +419,8 @@ importers:
         specifier: ^5.10.1
         version: 5.10.1
       hono:
-        specifier: ^4.13.1
-        version: 4.13.1
+        specifier: ^4.13.13
+        version: 4.13.13
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -4665,8 +4665,8 @@ packages:
   hermes-parser@0.25.1:
     resolution: {integrity: sha512-6pEjquH3rqaI6cYAXYPcz9MS4rY6R4ngRgrgfDshRptUZIc3lw0MCIJIGDj9++mfySOuPTHB4nrSW99BCvOPIA==}
 
-  hono@4.13.1:
-    resolution: {integrity: sha512-kdJoFVv2xmayw6cY09H7AbMJMt8Jn5jdlEdXsP7AGBdF2DIptVlKlOLKXP41yPip4/a3yQPv9gVcJYI8YY04dw==}
+  hono@4.13.13:
+    resolution: {integrity: sha512-CQ46U0ZkAGmbT/4UxdzzGJpacP2IeKgY4a5/tOI9AABbpOMfK739wfDXmv1usCk+3RkKj1hQy4/fjhiwa2xlrA==}
     engines: {node: '>=16.9.0'}
 
   hookable@6.1.1:
@@ -7553,9 +7553,9 @@ snapshots:
     optionalDependencies:
       '@noble/hashes': 2.2.0
 
-  '@hono/zod-validator@0.9.1(hono@4.13.1)(zod@4.4.3)':
+  '@hono/zod-validator@0.9.1(hono@4.13.13)(zod@4.4.3)':
     dependencies:
-      hono: 4.13.1
+      hono: 4.13.13
       zod: 4.4.3
 
   '@humanfs/core@0.19.2':
@@ -10329,7 +10329,7 @@ snapshots:
     dependencies:
       hermes-estree: 0.25.1
 
-  hono@4.13.1: {}
+  hono@4.13.13: {}
 
   hookable@6.1.1: {}
 
