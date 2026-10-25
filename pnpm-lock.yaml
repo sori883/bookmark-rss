@@ -560,8 +560,8 @@ importers:
         specifier: ^0.6.0
         version: 0.6.0
       ai:
-        specifier: ^6.0.300
-        version: 6.0.300(zod@4.4.3)
+        specifier: ^6.0.315
+        version: 6.0.315(zod@4.4.3)
       drizzle-orm:
         specifier: 'catalog:'
         version: 0.45.3(@libsql/client@0.17.4)(@opentelemetry/api@1.9.1)(@prisma/client@5.22.0)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(kysely@0.28.17)(pg@8.20.0)
@@ -726,20 +726,20 @@ packages:
   '@adobe/css-tools@4.4.4':
     resolution: {integrity: sha512-Elp+iwUx5rN5+Y8xLt5/GRoG20WGoDCQ/1Fb+1LiGtvwbDavuSk0jhD/eZdckHAuzcDzccnkv+rEjyWfRx18gg==}
 
-  '@ai-sdk/gateway@3.0.209':
-    resolution: {integrity: sha512-CjCBzC35lRZ0LnUYLDfTB92p0Fr1Fu9Wrivc+LI0u3ox/DyZ0wPOHjt8DKBKHD/R4aZ86+JCFFuD9f8MFjAQFg==}
+  '@ai-sdk/gateway@3.0.221':
+    resolution: {integrity: sha512-21M3q5NuAuItmHmU2rlcK3OBb9zvcvctcyzQUu/O6YkAjVNqQjyhJ9XnYlUupdrZhNR0sn0QNmSh3zKtesqY8w==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
 
-  '@ai-sdk/provider-utils@4.0.57':
-    resolution: {integrity: sha512-89a7sPvZqXsP3PigcAQLWntu/duIVEcN/RyChAB+j6p3C7NwW767sVttvL8r0+BetTg63uAXQoYHCZZueQKBSw==}
+  '@ai-sdk/provider-utils@4.0.62':
+    resolution: {integrity: sha512-+FXkZ2e169zASBHP5HAakP0Iai3Eoa8zgh7bnuZExsek3N9HgGt/c7l1Oibdxb79vvsn5Mrg2Sjam80mR6bL8A==}
     engines: {node: '>=18.17'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
 
-  '@ai-sdk/provider@3.0.18':
-    resolution: {integrity: sha512-IpefF5ssZVOZCD4Wu7zxt6PwZoGT2HLVjxpJ10Bjx6EAmRfLYJPjyrfxb0RYDlwvXnDb9nkQ7Do/oJVDuRFzew==}
+  '@ai-sdk/provider@3.0.19':
+    resolution: {integrity: sha512-5lWq7zSfRaU5ylDESn3sDQjgGl2AI1vjZKO/6JY3aFW70ct4zcP1kN+ZUYOuTXr28fVsYbyu2YFhddLdIgQFZQ==}
     engines: {node: '>=18'}
 
   '@aklinker1/rollup-plugin-visualizer@5.12.0':
@@ -3447,8 +3447,8 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  ai@6.0.300:
-    resolution: {integrity: sha512-ZBT30eQTy6exP+EWJJxm3DMb34m9td8STy+hfnvKdjhyEQoM8vQN5YfFLTRVVTCONHoM+y5K+Tudb6PTFrpikA==}
+  ai@6.0.315:
+    resolution: {integrity: sha512-uel8Yc0e58rLUcMfUaL6fzCe9zV7Rk3JfV4RJzs81AUBSvQ8NRkGsTgdtZizaEmAsYsFoGlDy88DYYu5rH/+2w==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
@@ -6668,22 +6668,22 @@ snapshots:
 
   '@adobe/css-tools@4.4.4': {}
 
-  '@ai-sdk/gateway@3.0.209(zod@4.4.3)':
+  '@ai-sdk/gateway@3.0.221(zod@4.4.3)':
     dependencies:
-      '@ai-sdk/provider': 3.0.18
-      '@ai-sdk/provider-utils': 4.0.57(zod@4.4.3)
+      '@ai-sdk/provider': 3.0.19
+      '@ai-sdk/provider-utils': 4.0.62(zod@4.4.3)
       '@vercel/oidc': 3.2.0
       zod: 4.4.3
 
-  '@ai-sdk/provider-utils@4.0.57(zod@4.4.3)':
+  '@ai-sdk/provider-utils@4.0.62(zod@4.4.3)':
     dependencies:
-      '@ai-sdk/provider': 3.0.18
+      '@ai-sdk/provider': 3.0.19
       '@standard-schema/spec': 1.1.0
       eventsource-parser: 3.0.8
       undici: 6.29.0
       zod: 4.4.3
 
-  '@ai-sdk/provider@3.0.18':
+  '@ai-sdk/provider@3.0.19':
     dependencies:
       json-schema: 0.4.0
 
@@ -9087,11 +9087,11 @@ snapshots:
 
   acorn@8.16.0: {}
 
-  ai@6.0.300(zod@4.4.3):
+  ai@6.0.315(zod@4.4.3):
     dependencies:
-      '@ai-sdk/gateway': 3.0.209(zod@4.4.3)
-      '@ai-sdk/provider': 3.0.18
-      '@ai-sdk/provider-utils': 4.0.57(zod@4.4.3)
+      '@ai-sdk/gateway': 3.0.221(zod@4.4.3)
+      '@ai-sdk/provider': 3.0.19
+      '@ai-sdk/provider-utils': 4.0.62(zod@4.4.3)
       '@opentelemetry/api': 1.9.1
       zod: 4.4.3
 
