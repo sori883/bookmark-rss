@@ -24,7 +24,7 @@
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.12"
   },
   "prettier": "@acme/prettier-config"
 }
