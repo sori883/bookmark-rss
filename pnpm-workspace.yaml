@@ -5,7 +5,7 @@ packages:
 
 catalog:
   '@eslint/js': ^10.0.1
-  '@libsql/client': 0.17.4
+  '@libsql/client': 0.18.0
   '@tailwindcss/postcss': ^4.3.3
   '@types/node': ^25.9.9
   drizzle-kit: ^0.31.11
