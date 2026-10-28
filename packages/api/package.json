@@ -25,7 +25,7 @@
     "@acme/jobs": "workspace:*",
     "@hono/zod-validator": "^0.9.1",
     "drizzle-orm": "catalog:",
-    "fast-xml-parser": "^5.10.1",
+    "fast-xml-parser": "^5.11.2",
     "hono": "^4.13.14",
     "zod": "catalog:"
   },

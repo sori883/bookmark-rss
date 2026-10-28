@@ -21,7 +21,7 @@
     "@mozilla/readability": "^0.6.0",
     "ai": "^6.0.317",
     "drizzle-orm": "catalog:",
-    "fast-xml-parser": "^5.10.1",
+    "fast-xml-parser": "^5.11.2",
     "linkedom": "^0.18.14",
     "turndown": "^7.2.4",
     "zod": "catalog:"
