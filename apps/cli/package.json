@@ -39,7 +39,7 @@
     "dotenv": "^17.4.2",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "tsdown": "^0.22.14",
+    "tsdown": "^0.23.3",
     "typescript": "catalog:",
     "vitest": "^4.1.12"
   },
