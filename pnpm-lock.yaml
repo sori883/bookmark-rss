@@ -569,8 +569,8 @@ importers:
         specifier: ^5.11.2
         version: 5.11.2
       linkedom:
-        specifier: ^0.18.14
-        version: 0.18.14
+        specifier: ^0.18.15
+        version: 0.18.15
       turndown:
         specifier: ^7.2.4
         version: 7.2.4
@@ -3915,6 +3915,10 @@ packages:
     engines: {node: '>=4'}
     hasBin: true
 
+  cssomnom@0.1.11:
+    resolution: {integrity: sha512-P4RkO1Sq2Ual77xypEmAc4MkM5k2Ha4UwtBPCOpJmXculGCYPgzsU/xnOCy084esZaPePgGkkJg4Il/HE7GS5A==}
+    engines: {node: '>=20.0.0'}
+
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
@@ -5217,6 +5221,15 @@ packages:
 
   linkedom@0.18.14:
     resolution: {integrity: sha512-BRUnkOm4YR5vo+qI3j0EbungB0vZPSCue5AdnTQRaxAGSbsOZiBFRO0rh4zlo8qXUhli8pxvnpEXDklMnlq2Rg==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      canvas: '>= 2'
+    peerDependenciesMeta:
+      canvas:
+        optional: true
+
+  linkedom@0.18.15:
+    resolution: {integrity: sha512-o0w7eD/SvoCao+pUi6dzocCLuMR11g4Tv/et0W2OUzwWmUcewntSzyl+Ua/K+0yKym0Y/Mav3nFAaI5Av5jvZg==}
     engines: {node: '>=16'}
     peerDependencies:
       canvas: '>= 2'
@@ -9622,6 +9635,8 @@ snapshots:
 
   cssesc@3.0.0: {}
 
+  cssomnom@0.1.11: {}
+
   csstype@3.2.3: {}
 
   damerau-levenshtein@1.0.8: {}
@@ -10919,6 +10934,14 @@ snapshots:
     dependencies:
       '@acemir/cssom': 0.9.32
       css-select: 7.0.0
+      html-escaper: 3.0.3
+      htmlparser2: 10.1.0
+      uhyphen: 0.2.0
+
+  linkedom@0.18.15:
+    dependencies:
+      css-select: 7.0.0
+      cssomnom: 0.1.11
       html-escaper: 3.0.3
       htmlparser2: 10.1.0
       uhyphen: 0.2.0
