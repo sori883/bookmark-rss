@@ -560,8 +560,8 @@ importers:
         specifier: ^0.6.0
         version: 0.6.0
       ai:
-        specifier: ^6.0.319
-        version: 6.0.319(zod@4.4.3)
+        specifier: ^6.0.320
+        version: 6.0.320(zod@4.4.3)
       drizzle-orm:
         specifier: 'catalog:'
         version: 0.45.4(@libsql/client@0.18.0)(@opentelemetry/api@1.9.1)(@prisma/client@5.22.0)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(kysely@0.28.17)(pg@8.20.0)
@@ -729,8 +729,8 @@ packages:
   '@adobe/css-tools@4.4.4':
     resolution: {integrity: sha512-Elp+iwUx5rN5+Y8xLt5/GRoG20WGoDCQ/1Fb+1LiGtvwbDavuSk0jhD/eZdckHAuzcDzccnkv+rEjyWfRx18gg==}
 
-  '@ai-sdk/gateway@3.0.225':
-    resolution: {integrity: sha512-WSW7Hk/YER3AqF/ONyh/UounSRDfJ/J4VtVYG75tMcO4/s8DFACqHLkfeMSgfWcmujU1+L3liAlcixwn24rnCw==}
+  '@ai-sdk/gateway@3.0.226':
+    resolution: {integrity: sha512-8lSJyyWqzpzEgUWZwY7miqIsl9NZv6qtlaioK7GSnQTbQkX5T8PEVz8IxCCRAwFYpria5O0YqKaukuIgZemfpA==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
@@ -3536,8 +3536,8 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  ai@6.0.319:
-    resolution: {integrity: sha512-1sMXGSM50gL5R7bJjQrYwqyhdS8YNZgW4LuPZeZ3G+sJ0vHyVyGIgzb59XA3dbgwKxLjvY1hjT+SFAAypfsDsg==}
+  ai@6.0.320:
+    resolution: {integrity: sha512-TYPfDbhIDMJKMpMGFUmr5dxmerEWPODDAmcARyhlA1392Ru8p+hkWB67FnsC7yC9/T+jlilRZTEZHe/6yJAF2Q==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
@@ -6778,7 +6778,7 @@ snapshots:
 
   '@adobe/css-tools@4.4.4': {}
 
-  '@ai-sdk/gateway@3.0.225(zod@4.4.3)':
+  '@ai-sdk/gateway@3.0.226(zod@4.4.3)':
     dependencies:
       '@ai-sdk/provider': 3.0.19
       '@ai-sdk/provider-utils': 4.0.63(zod@4.4.3)
@@ -9255,9 +9255,9 @@ snapshots:
 
   acorn@8.16.0: {}
 
-  ai@6.0.319(zod@4.4.3):
+  ai@6.0.320(zod@4.4.3):
     dependencies:
-      '@ai-sdk/gateway': 3.0.225(zod@4.4.3)
+      '@ai-sdk/gateway': 3.0.226(zod@4.4.3)
       '@ai-sdk/provider': 3.0.19
       '@ai-sdk/provider-utils': 4.0.63(zod@4.4.3)
       '@opentelemetry/api': 1.9.1
